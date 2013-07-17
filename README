@@ -1,1 +1,7 @@
 Two player, single-button game played on an LED strand.
+
+Each player uses their button to launch colored projectiles from opposite ends
+of the strand toward a white "puck" in the center, moving it toward the
+opposing side. Each shot will lock out all other shots for a brief moment,
+allowing you to block enemy shots if you can predict when they will be fired
+and shoot just before. 
