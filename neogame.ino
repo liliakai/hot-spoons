@@ -16,66 +16,81 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, PIN, NEO_GRB + NEO_KHZ800);
 #define B3 A8
 
 uint32_t c1, c2;
+int center = strip.numPixels()/2;
 
 void setup() {
-  pinMode(A6, INPUT);
-  pinMode(A7, INPUT);
-  pinMode(A8, INPUT);
-  digitalWrite(A6, HIGH);
-  digitalWrite(A7, HIGH);
-  digitalWrite(A8, HIGH);
-  
+  pinMode(B1, INPUT);
+  pinMode(B2, INPUT);
+  pinMode(B3, INPUT);
+  digitalWrite(B1, HIGH);
+  digitalWrite(B2, HIGH);
+  digitalWrite(B3, HIGH);
+
   Serial.begin(9600);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-
-  strip.setPixelColor(120, strip.Color(255, 255, 255));
-
-  strip.show();
 
   c1 = strip.Color(255, 0, 0);
   c2 = strip.Color(0, 255, 0);
 }
 
 void game_step() {
-  uint32_t c, n;
-  c = strip.getPixelColor(0);
-  for (int i=0; i < 120; i++) {
-    n = strip.getPixelColor(i+1);
-    if (n == 0) {
-      strip.setPixelColor(i+1, c);
-    }
-    strip.setPixelColor(i, 0);
-    c = n;
+  strip.setPixelColor(center, strip.Color(255, 255, 255));
+
+  for (int i=center-1; i > -1; i--) {
+    strip.setPixelColor(i, strip.getPixelColor(i-1));
   }
-  
-  c = strip.getPixelColor(strip.numPixels()-1);
-  for (int i=strip.numPixels()-1; i > 120; i--) {
-    n = strip.getPixelColor(i-1);
-    if (n == 0) {
-      strip.setPixelColor(i-1, c);
-    }
-    strip.setPixelColor(i, 0);
-    c = n;
+  for (int i=center+1; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, strip.getPixelColor(i+1));
+  }
+
+  if (strip.getPixelColor(center-1)) {
+    strip.setPixelColor(center-1, 0);
+    center++;
+  }
+  if (strip.getPixelColor(center+1)) {
+    strip.setPixelColor(center+1, 0);
+    center--;
   }
 }
 
-void readButtons() {
-  if (digitalRead(A6) == 0) {  
-    Serial.println("pew!");
-    strip.setPixelColor(0, c1);
-  }
+int b1prev, b2prev;
+boolean debounce(int button, int* prev) {
+  int newval = digitalRead(button);
+  int oldval = *prev;
+  *prev = newval;
 
-  if (digitalRead(A8) == 0) {
-    Serial.println("bew!");
-    strip.setPixelColor(strip.numPixels()-1, c2);
-  }
+  return (newval == 0) && (newval != oldval);
+}
+
+int lockout = 0;
+void handleButtons() {
+  boolean b1 = debounce(B1, &b1prev);
+  boolean b2 = debounce(B3, &b2prev);
+  if (!lockout) {
+    if (b1 || b2) lockout = 5;
+
+    if (b1) {  
+      Serial.println("pew!");
+      strip.setPixelColor(0, c1);
+    }  
+
+    if (b2) {
+      Serial.println("bew!");
+      strip.setPixelColor(strip.numPixels()-1, c2);
+    }
+    
+  } else {
+    lockout--;
+  }  
 }
 
 void loop() {  
-  readButtons();
+  game_step();
+  handleButtons();
   strip.show();
 }
+
 
 
 
