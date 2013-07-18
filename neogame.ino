@@ -19,6 +19,8 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 
 uint32_t c1, c2;
 int puck = strip.numPixels()/2;
+int b1fired = 0;  // if b1 has a shot out right now
+int b2fired = 0;  // if b2 has a shot out right now
 
 void setup() {
   pinMode(B1, INPUT); // pins default to inputs anyway
@@ -48,10 +50,12 @@ void game_step() {
 
   if (strip.getPixelColor(puck-1)) {  // if red is just below puck, move puck up toward green
     strip.setPixelColor(puck-1, 0);
+    b1fired--;  // the shot fired by b2 landed
     puck++;
   }
   if (strip.getPixelColor(puck+1)) { // if green is just above puck, move puck down toward red
     strip.setPixelColor(puck+1, 0);
+    b2fired--;  // the shot fired by b2 landed
     puck--;
   }
 } // game_step()
@@ -80,6 +84,7 @@ void handleButtons() {
     }
   }
 
+  if (b2fired || b1fired) return;
 
   if ( (b1 | b2) && (b1 ^ b2) ) {  // if one button is pressed
     if (lockout == 0) {
@@ -90,11 +95,13 @@ void handleButtons() {
       if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
         Serial.println("pew!");
         strip.setPixelColor(0, c1);  // b1 fires a shot from 0!
+        b1fired++;  // lock everything out until it's gone
         lockout = 0;
       }  
       else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
         Serial.println("bew!");
         strip.setPixelColor(strip.numPixels()-1, c2);  // b2 fires a shot from n-1!
+        b2fired++;  // lock everything out until it's gone
         lockout = 0;
       }
     }
