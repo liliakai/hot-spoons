@@ -28,7 +28,7 @@ void setup() {
   digitalWrite(B2, HIGH);
   digitalWrite(B3, HIGH);
 
-  Serial.begin(9600);
+  Serial.begin(57600);
   strip.begin();  // parameters in variable "strip"
   strip.show(); // Initialize all pixels to 'off'
 
