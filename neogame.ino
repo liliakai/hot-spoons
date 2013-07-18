@@ -71,7 +71,15 @@ void handleButtons() {
   boolean b1 = debounce(B1, &b1prev);
   boolean b2 = debounce(B2, &b2prev);
 
-  if (lockout) { lockout--; }
+  if (lockout) { 
+    lockout--;
+    if (!lockout)  { // the firster didn't get seconded so they get punished!
+      if (locker == B1) puck--; // punish the guilty (they pressed and were not seconded)
+      else if (locker == B2) puck++;
+      return;
+    }
+  }
+
 
   if ( (b1 | b2) && (b1 ^ b2) ) {  // if one button is pressed
     if (lockout == 0) {
