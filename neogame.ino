@@ -40,21 +40,23 @@ void setup() {
 
 void game_step() {
   strip.setPixelColor(puck, strip.Color(255, 255, 255));  // puck, white, where it goes
+  strip.setPixelColor(puck+1, strip.Color(255, 255, 255));  // puck, white, where it goes
+  strip.setPixelColor(puck-1, strip.Color(255, 255, 255));  // puck, white, where it goes
 
-  for (int i=puck-1; i > -1; i--) {
+  for (int i=puck-2; i > -1; i--) {
     strip.setPixelColor(i, strip.getPixelColor(i-1));  // move pixels up toward puck
   }
-  for (int i=puck+1; i < strip.numPixels(); i++) {
+  for (int i=puck+2; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, strip.getPixelColor(i+1));  // move pixels down toward puck
   }
 
-  if (strip.getPixelColor(puck-1)) {  // if red is just below puck, move puck up toward green
-    strip.setPixelColor(puck-1, 0);
+  if (strip.getPixelColor(puck-2)) {  // if red is just below puck, move puck up toward green
+    strip.setPixelColor(puck-2, 0);  // erase shot
     b1fired--;  // the shot fired by b2 landed
     puck++;
   }
-  if (strip.getPixelColor(puck+1)) { // if green is just above puck, move puck down toward red
-    strip.setPixelColor(puck+1, 0);
+  if (strip.getPixelColor(puck+2)) { // if green is just above puck, move puck down toward red
+    strip.setPixelColor(puck+2, 0);  // erase shot
     b2fired--;  // the shot fired by b2 landed
     puck--;
   }
@@ -95,13 +97,15 @@ void handleButtons() {
       if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
         Serial.println("pew!");
         strip.setPixelColor(0, c1);  // b1 fires a shot from 0!
-        b1fired++;  // lock everything out until it's gone
+        strip.setPixelColor(1, c1);  // b1 fires a shot from 0!
+        b1fired+=2;  // lock everything out until it's gone
         lockout = 0;
       }  
       else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
         Serial.println("bew!");
         strip.setPixelColor(strip.numPixels()-1, c2);  // b2 fires a shot from n-1!
-        b2fired++;  // lock everything out until it's gone
+        strip.setPixelColor(strip.numPixels()-2, c2);  // b2 fires a shot from n-1!
+        b2fired+=2;  // lock everything out until it's gone
         lockout = 0;
       }
     }
