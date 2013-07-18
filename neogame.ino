@@ -12,8 +12,8 @@
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, PIN, NEO_GRB + NEO_KHZ800);
 
 #define B1 A6
-#define B2 A7
-#define B3 A8
+#define B2 A8
+#define B3 A7
 
 uint32_t c1, c2;
 int center = strip.numPixels()/2;
@@ -64,25 +64,31 @@ boolean debounce(int button, int* prev) {
 }
 
 int lockout = 0;
+int locker = 0;
 void handleButtons() {
   boolean b1 = debounce(B1, &b1prev);
-  boolean b2 = debounce(B3, &b2prev);
-  if (!lockout) {
-    if (b1 || b2) lockout = 5;
+  boolean b2 = debounce(B2, &b2prev);
 
-    if (b1) {  
-      Serial.println("pew!");
-      strip.setPixelColor(0, c1);
-    }  
+  if (lockout) { lockout--; }
 
-    if (b2) {
-      Serial.println("bew!");
-      strip.setPixelColor(strip.numPixels()-1, c2);
+  if ( (b1 | b2) && (b1 ^ b2) ) {
+    if (lockout == 0) {
+      locker = b1 ? B1 : B2 ;
+      lockout = 20;
+    } 
+    else {
+      if (locker == B1 && b2) {  
+        Serial.println("pew!");
+        strip.setPixelColor(0, c1);
+        lockout = 0;
+      }  
+      else if (locker == B2 && b1) {
+        Serial.println("bew!");
+        strip.setPixelColor(strip.numPixels()-1, c2);
+        lockout = 0;
+      }
     }
-    
-  } else {
-    lockout--;
-  }  
+  }
 }
 
 void loop() {  
@@ -90,6 +96,8 @@ void loop() {
   handleButtons();
   strip.show();
 }
+
+
 
 
 
