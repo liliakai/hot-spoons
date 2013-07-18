@@ -16,13 +16,13 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, PIN, NEO_GRB + NEO_KHZ800);
 #define B3 A7
 
 uint32_t c1, c2;
-int center = strip.numPixels()/2;
+int puck = strip.numPixels()/2;
 
 void setup() {
   pinMode(B1, INPUT);
   pinMode(B2, INPUT);
   pinMode(B3, INPUT);
-  digitalWrite(B1, HIGH);
+  digitalWrite(B1, HIGH); // turn on pull-up resistors for buttons
   digitalWrite(B2, HIGH);
   digitalWrite(B3, HIGH);
 
@@ -30,29 +30,29 @@ void setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
-  c1 = strip.Color(255, 0, 0);
-  c2 = strip.Color(0, 255, 0);
+  c1 = strip.Color(255, 0, 0);  // c1 = red?
+  c2 = strip.Color(0, 255, 0);  // c2 = green?
 }
 
 void game_step() {
-  strip.setPixelColor(center, strip.Color(255, 255, 255));
+  strip.setPixelColor(puck, strip.Color(255, 255, 255));  // puck, white, where it goes
 
-  for (int i=center-1; i > -1; i--) {
+  for (int i=puck-1; i > -1; i--) {
     strip.setPixelColor(i, strip.getPixelColor(i-1));
   }
-  for (int i=center+1; i < strip.numPixels(); i++) {
+  for (int i=puck+1; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, strip.getPixelColor(i+1));
   }
 
-  if (strip.getPixelColor(center-1)) {
-    strip.setPixelColor(center-1, 0);
-    center++;
+  if (strip.getPixelColor(puck-1)) {
+    strip.setPixelColor(puck-1, 0);
+    puck++;
   }
-  if (strip.getPixelColor(center+1)) {
-    strip.setPixelColor(center+1, 0);
-    center--;
+  if (strip.getPixelColor(puck+1)) {
+    strip.setPixelColor(puck+1, 0);
+    puck--;
   }
-}
+} // game_step()
 
 int b1prev, b2prev;
 boolean debounce(int button, int* prev) {
