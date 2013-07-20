@@ -770,10 +770,10 @@ void rwb_march(int idelay) { //R,W,B MARCH CCW
   case 0:
     leds[0].r = 255;
     leds[0].g = 0;
-    leds[0].b = 0;
+    leds[0].b = 255;
     break;
   case 1:
-    leds[0].r = 255;
+    leds[0].r = 0;
     leds[0].g = 255;
     leds[0].b = 255;
     break;
@@ -1224,7 +1224,7 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
 
 void demo_mode(){
   int r = 10;
-  for(int i=0; i<r*3; i++) {
+  for(int i=0; i<r; i++) {
     one_color_all(255,255,255);
   }
   for(int i=0; i<r*25; i++) {
@@ -1330,6 +1330,14 @@ void demo_mode(){
 
 //------------------MAIN LOOP------------------
 void fb_loop() {
+  if(debounce(B1, &b1prev)) {
+    ledMode--;
+    ledMode %= 25;
+  }
+  if(debounce(B3, &b3prev)) {
+    ledMode++;
+    ledMode %= 25;
+  }
 
   sCmd.readSerial();     //-PROCESS SERIAL COMMANDS
 
