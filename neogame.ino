@@ -19,14 +19,26 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, PIN, NEO_GRB + NEO_KHZ800);
 #define B2 A7
 #define B3 A8
 
+#define FREEPLAY_MODE 0
 #define FB_MODE 1
+#define TIMEWINDOW 20
 
 uint32_t c1, c2;
-int center = strip.numPixels()/2;
-
-int mode = FB_MODE;
+int puck;
+int b1fired, b2fired = 0;
+int mode = FREEPLAY_MODE;
 
 void game_setup() {
+  Serial.begin(9600);
+  strip.begin();
+  strip.show(); // Initialize all pixels to 'off'
+
+  c1 = strip.Color(255, 0, 0);
+  c2 = strip.Color(0, 255, 0);
+  puck = strip.numPixels()/2;
+}
+
+void setup() {
 
   pinMode(B1, INPUT);
   pinMode(B2, INPUT);
@@ -34,17 +46,6 @@ void game_setup() {
   digitalWrite(B1, HIGH);
   digitalWrite(B2, HIGH);
   digitalWrite(B3, HIGH);
-
-  Serial.begin(9600);
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
-
-  c1 = strip.Color(255, 0, 0);
-  c2 = strip.Color(0, 255, 0);
-
-}
-
-void setup() {
 
   if (mode == FB_MODE) {
     fb_setup();
@@ -54,25 +55,56 @@ void setup() {
   }
 }
 
+int puck_padding = 1; // must be odd
 void game_step() {
-  strip.setPixelColor(center, strip.Color(255, 255, 255));
+  for (int i=puck - puck_padding; i < puck + puck_padding+1; i++) {
+    strip.setPixelColor(i, strip.Color(255, 255, 255));
+  }
 
-  for (int i=center-1; i > -1; i--) {
+  for (int i=puck-puck_padding-1; i > -1; i--) {
     strip.setPixelColor(i, strip.getPixelColor(i-1));
   }
-  for (int i=center+1; i < strip.numPixels(); i++) {
+  for (int i=puck+puck_padding+1; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, strip.getPixelColor(i+1));
   }
 
-  if (strip.getPixelColor(center-1)) {
-    strip.setPixelColor(center-1, 0);
-    center++;
+  if (strip.getPixelColor(puck-puck_padding-1)) {
+    strip.setPixelColor(puck-puck_padding-1, 0);
+    b1fired--;
+    puck++;
   }
-  if (strip.getPixelColor(center+1)) {
-    strip.setPixelColor(center+1, 0);
-    center--;
+  if (strip.getPixelColor(puck+puck_padding+1)) {
+    strip.setPixelColor(puck+puck_padding+1, 0);
+    b2fired--;
+    puck--;
+  }
+
+  if (puck == 0) {
+    flash(c2, 10, 100);
+    setup();
+  }
+  if (puck == strip.numPixels()-1) {
+    flash(c1, 10, 100);
+    setup();
   }
 }
+
+void flash(uint32_t c, int times, int d) {
+  for (int j=0; j < times; j++) {
+    for(uint16_t i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, c);
+    }
+    strip.show();
+    delay(d);
+    for(uint16_t i=0; i<strip.numPixels(); i++) {
+      strip.setPixelColor(i, 0);
+    }
+    strip.show();
+    delay(d);
+
+  }
+}
+
 
 int b1prev, b2prev, b3prev;
 boolean debounce(int button, int* prev) {
@@ -83,41 +115,82 @@ boolean debounce(int button, int* prev) {
   return (newval == 0) && (newval != oldval);
 }
 
+
+void handleButtons_freeplay() {
+  boolean b1 = digitalRead(B1);
+  boolean b2 = digitalRead(B3);
+  if (b1 == 0) {  
+    Serial.println("pew!");
+    strip.setPixelColor(0, c1);
+  }  
+
+  if (b2 == 0) {
+    Serial.println("bew!");
+    strip.setPixelColor(strip.numPixels()-1, c2);
+  }
+
+} 
+
+
 int lockout = 0;
-void handleButtons() {
+int locker = 0;
+void handleButtons_timing() {
   boolean b1 = debounce(B1, &b1prev);
   boolean b2 = debounce(B3, &b2prev);
-  if (!lockout) {
-    if (b1 || b2) lockout = 5;
 
-    if (b1) {  
-      Serial.println("pew!");
-      strip.setPixelColor(0, c1);
-    }  
-
-    if (b2) {
-      Serial.println("bew!");
-      strip.setPixelColor(strip.numPixels()-1, c2);
-    }
-
-  } 
-  else {
+  if (lockout) {
     lockout--;
-  }  
-}
+    if (!lockout)  { // the firster didn't get seconded so they get punished!
+      if (locker == B1) puck--; // punish the guilty (they pressed and were not seconded)
+      else if (locker == B2) puck++;
+      return;
+    }
+  }
+
+  if (b2fired || b1fired) return;
+
+  if ( (b1 | b2) && (b1 ^ b2) ) {  // if one button is pressed
+    if (lockout == 0) {
+      locker = b1 ? B1 : B2 ;  // say which button pin number locked (firsted) it
+      lockout = TIMEWINDOW;       // 20 is the count value for the time window
+    }
+    else {  // we're firsted, who hit it 2nd?
+      if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
+        Serial.println("pew!");
+        strip.setPixelColor(0, c1);  // b1 fires a shot from 0!
+        strip.setPixelColor(1, c1);  // b1 fires a shot from 0!
+        b1fired+=2;  // lock everything out until it's gone
+        lockout = 0;
+      }
+      else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
+        Serial.println("bew!");
+        strip.setPixelColor(strip.numPixels()-1, c2);  // b2 fires a shot from n-1!
+        strip.setPixelColor(strip.numPixels()-2, c2);  // b2 fires a shot from n-1!
+        b2fired+=2;  // lock everything out until it's gone
+        lockout = 0;
+      }
+    }
+  }
+}  // handleButtons()
+
 
 void game_loop() {
   game_step();
-  handleButtons();
+  if (mode == FREEPLAY_MODE) {
+    handleButtons_freeplay();
+  } 
+  else {
+    handleButtons_timing();
+  }
   strip.show();
 }
 
 void loop() { 
   if (debounce(B2, &b3prev)) {
-    mode = !mode;
+    mode = (mode + 1) % 3;
     setup();
   } 
-  
+
   if (mode == FB_MODE) {
     fb_loop();
   }
