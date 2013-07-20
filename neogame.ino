@@ -21,12 +21,21 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, PIN, NEO_GRB + NEO_KHZ800);
 
 #define FREEPLAY_MODE 0
 #define FB_MODE 1
-#define TIMEWINDOW 20
+#define TIMING_MODE 2
+#define TIMEWINDOW 30
+#define SHOT 10
+#define PENALTY 4
+#define PUCK_PADDING 1 // must be odd
+
+int mode = TIMING_MODE;
 
 uint32_t c1, c2;
 int puck;
-int b1fired, b2fired = 0;
-int mode = FREEPLAY_MODE;
+int lockout;
+int locker;
+int b1fired, b2fired;
+int b1prev, b2prev, b3prev;
+
 
 void game_setup() {
   Serial.begin(9600);
@@ -36,10 +45,13 @@ void game_setup() {
   c1 = strip.Color(255, 0, 0);
   c2 = strip.Color(0, 255, 0);
   puck = strip.numPixels()/2;
+  lockout = 0;
+  locker = 0;
+  b1fired = 0;
+  b2fired = 0;
 }
 
 void setup() {
-
   pinMode(B1, INPUT);
   pinMode(B2, INPUT);
   pinMode(B3, INPUT);
@@ -55,27 +67,27 @@ void setup() {
   }
 }
 
-int puck_padding = 1; // must be odd
 void game_step() {
-  for (int i=puck - puck_padding; i < puck + puck_padding+1; i++) {
-    strip.setPixelColor(i, strip.Color(255, 255, 255));
+  for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
+    strip.setPixelColor(i, strip.Color(128, 128, 128));
   }
 
-  for (int i=puck-puck_padding-1; i > -1; i--) {
+  for (int i=puck-PUCK_PADDING-1; i > -1; i--) {
     strip.setPixelColor(i, strip.getPixelColor(i-1));
   }
-  for (int i=puck+puck_padding+1; i < strip.numPixels(); i++) {
+  for (int i=puck+PUCK_PADDING+1; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, strip.getPixelColor(i+1));
   }
 
-  if (strip.getPixelColor(puck-puck_padding-1)) {
-    strip.setPixelColor(puck-puck_padding-1, 0);
-    b1fired--;
+  if (strip.getPixelColor(puck-PUCK_PADDING-1)) {
+    strip.setPixelColor(puck-PUCK_PADDING-1, 0);
+    if (b1fired) b1fired--; 
+    
     puck++;
   }
-  if (strip.getPixelColor(puck+puck_padding+1)) {
-    strip.setPixelColor(puck+puck_padding+1, 0);
-    b2fired--;
+  if (strip.getPixelColor(puck+PUCK_PADDING+1)) {
+    strip.setPixelColor(puck+PUCK_PADDING+1, 0);
+    if (b2fired) b2fired--;
     puck--;
   }
 
@@ -105,8 +117,6 @@ void flash(uint32_t c, int times, int d) {
   }
 }
 
-
-int b1prev, b2prev, b3prev;
 boolean debounce(int button, int* prev) {
   int newval = digitalRead(button);
   int oldval = *prev;
@@ -132,17 +142,19 @@ void handleButtons_freeplay() {
 } 
 
 
-int lockout = 0;
-int locker = 0;
 void handleButtons_timing() {
   boolean b1 = debounce(B1, &b1prev);
-  boolean b2 = debounce(B3, &b2prev);
-
+  boolean b2 = debounce(B3, &b3prev);
+  
   if (lockout) {
     lockout--;
-    if (!lockout)  { // the firster didn't get seconded so they get punished!
-      if (locker == B1) puck--; // punish the guilty (they pressed and were not seconded)
-      else if (locker == B2) puck++;
+    if (!lockout)  {     // the firster didn't get seconded so they get punished!
+      if (locker == B1) {
+        puck -= PENALTY; // punish the guilty (they pressed and were not seconded)
+      }
+      else if (locker == B2) {
+        puck += PENALTY;
+      }
       return;
     }
   }
@@ -157,16 +169,18 @@ void handleButtons_timing() {
     else {  // we're firsted, who hit it 2nd?
       if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
         Serial.println("pew!");
-        strip.setPixelColor(0, c1);  // b1 fires a shot from 0!
-        strip.setPixelColor(1, c1);  // b1 fires a shot from 0!
-        b1fired+=2;  // lock everything out until it's gone
+        for (int i=0; i < SHOT; i++) {
+          strip.setPixelColor(i, c1);  // b1 fires a shot from 0!
+        }
+        b1fired+=SHOT;  // lock everything out until it's gone
         lockout = 0;
       }
       else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
         Serial.println("bew!");
-        strip.setPixelColor(strip.numPixels()-1, c2);  // b2 fires a shot from n-1!
-        strip.setPixelColor(strip.numPixels()-2, c2);  // b2 fires a shot from n-1!
-        b2fired+=2;  // lock everything out until it's gone
+        for (int i=0; i < SHOT; i++) {
+          strip.setPixelColor(strip.numPixels()-1-i, c2);  // b2 fires a shot from n-1!
+        }
+        b2fired+=SHOT;  // lock everything out until it's gone
         lockout = 0;
       }
     }
@@ -186,7 +200,7 @@ void game_loop() {
 }
 
 void loop() { 
-  if (debounce(B2, &b3prev)) {
+  if (debounce(B2, &b2prev)) {
     mode = (mode + 1) % 3;
     setup();
   } 
