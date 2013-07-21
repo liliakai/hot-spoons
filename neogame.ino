@@ -1002,7 +1002,6 @@ void quad_bright_curve(int ahue, int idelay) {  //-QUADRATIC BRIGHTNESS CURVER
     leds[x].g = acolor[1]; 
     leds[x].b = acolor[2];
 
-
   }
   LEDS.show();  
   delay(idelay);
@@ -1265,14 +1264,14 @@ void demo_mode(){
   for(int i=0; i<r*50; i++) {
     rainbow_loop(10, 20);
   }
-  for(int i=0; i<r*50; i++) {
+  for(int i=0; i<r*30; i++) {
     random_burst(20);
   }
   for(int i=0; i<r*12; i++) {
     color_bounce(20);
   }
   for(int i=0; i<r*12; i++) {
-    color_bounceFADE(40);
+    color_bounceFADE(20);
   }
   /*
   for(int i=0; i<r*5; i++) {
@@ -1283,7 +1282,7 @@ void demo_mode(){
   }
   */
   for(int i=0; i<r*35; i++) {
-    flicker(200, 255);
+    flicker(0, 255);
   }
   for(int i=0; i<r*50; i++) {
     pulse_one_color_all(0, 10);
@@ -1321,13 +1320,13 @@ void demo_mode(){
   for(int i=0; i<r*10; i++) {
     sin_bright_wave(240, 35);
   }
-  for(int i=0; i<r*5; i++) {
+  for(int i=0; i<r*40; i++) {
     pop_horizontal(300, 100);
   }
   for(int i=0; i<r*5; i++) {
     quad_bright_curve(240, 100);
   }
-  for(int i=0; i<r*3; i++) {
+  for(int i=0; i<r; i++) {
     flame();
   }
   /*
