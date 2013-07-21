@@ -670,11 +670,9 @@ void flicker(int thishue, int thissat) {
 
   if (random_bool < 10) {
     HSVtoRGB(thishue, thissat, random_bright, thisColor);
-
-    for(int i = 0 ; i < NUM_LEDS; i++ ) {
-      set_color_led(i, thisColor[0], thisColor[1], thisColor[2]);
-    }
-
+    
+    one_color_allNOSHOW(thisColor[0], thisColor[1], thisColor[2]);
+    
     LEDS.show();    
     delay(random_delay);
   }
