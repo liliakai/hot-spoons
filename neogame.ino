@@ -888,7 +888,7 @@ void color_loop_vardelay() { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
 
   int di = abs(TOP_INDEX - idex); //-DISTANCE TO CENTER    
   //int t = constrain((10/di)*10, 10, 500); //-DELAY INCREASE AS INDEX APPROACHES CENTER (WITHIN LIMITS)
-  int t = constrain(100 * di / (NUM_PIXELS/2), 10, 100);
+  int t = constrain(100 * di / (NUM_LEDS/2), 10, 100);
 
   for(int i = 0; i < NUM_LEDS; i++ ) {
     if (i == idex) {
