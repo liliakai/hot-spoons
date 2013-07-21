@@ -1,8 +1,7 @@
 #include <Adafruit_NeoPixel.h>
-#include "pitches.h"
 
 #define STRIPPIN 13
-#define TONEPIN 53  // which pin sound comes out of
+// MIDI OUTPUT PIN IS TX OF SECOND SERIAL PORT
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -20,9 +19,10 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 #define TIMEWINDOW 20  // HOW MANY cycles is the time window
 
 #define TUNESIZE 7 // how many notes per tune
+  // play notes from F#-0 (0x1E) to F#-5 (0x5A):
 int tunes[][TUNESIZE] = {
-  { NOTE_C4, NOTE_B4, NOTE_A4, NOTE_G3, NOTE_F3, NOTE_E3, NOTE_D3}, // PEW
-  { NOTE_A3, NOTE_B3, NOTE_C3, NOTE_D3, NOTE_E3, NOTE_F3, NOTE_C3}  // BEW
+  { 0x4A, 0x49, 0x48, 0x47, 0x46, 0x45, 0x44 }, // PEW
+  { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37 }  // BEW
 };
 
 #define TUNERATE 5 // how many LED frames per tunes advancement 
@@ -34,14 +34,22 @@ int tunePosition = 0; // this increments every LED animation frame
 
 void makeNoise() {
   if (whichTune > -1) { // if we are playing a tune
-    tone(TONEPIN, tunes[whichTune][tunePosition++ / TUNERATE]); // play at the appropriate rate
+    noteOn(0x90, tunes[whichTune][tunePosition++ / TUNERATE], 0x45); // channel 1=0x90, note, half velocity=0x45
     if (tunePosition / TUNERATE >= TUNESIZE) {
       tunePosition = 0; // the song is over (can repeat or stop now)
       // whichTune = NONE;  // the tune must stop (comment this out to repeat tune until...)
     }
   }
-    else noTone(TONEPIN); // there is no tune playing
+    // MIDI note should just fade away?... else noTone(TONEPIN); // there is no tune playing
 } // makeNoise()
+
+//  plays a MIDI note.  Doesn't check to see that
+//  cmd is greater than 127, or that data values are  less than 127:
+void noteOn(int cmd, int pitch, int velocity) {
+  Serial.write(cmd);
+  Serial.write(pitch);
+  Serial.write(velocity);
+}
 
 uint32_t c1, c2;
 int puck = strip.numPixels()/2;
@@ -62,6 +70,7 @@ void setup() {
 
   c1 = strip.Color(255, 0, 0);  // c1 = red
   c2 = strip.Color(0, 255, 0);  // c2 = green
+  Serial1.begin(31250); // setup SECOND serial port for MIDI output
 }
 
 void game_step() {
