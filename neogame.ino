@@ -3,7 +3,6 @@
 #include <SerialCommand.h>
 #define SERIALCOMMAND_DEBUG 1
 #define NUM_LEDS 240
-#include "pitches.h"
 
 #define STRIPPIN 13
 #define TONEPIN 53  // which pin sound comes out of
@@ -32,9 +31,10 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 int mode = TIMING_MODE;
 
 #define TUNESIZE 7 // how many notes per tune
+  // play notes from F#-0 (0x1E) to F#-5 (0x5A):
 int tunes[][TUNESIZE] = {
-  { NOTE_C4, NOTE_B4, NOTE_A4, NOTE_G3, NOTE_F3, NOTE_E3, NOTE_D3}, // PEW
-  { NOTE_A3, NOTE_B3, NOTE_C3, NOTE_D3, NOTE_E3, NOTE_F3, NOTE_C3}  // BEW
+  { 0x4A, 0x49, 0x48, 0x47, 0x46, 0x45, 0x44 }, // PEW
+  { 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37 }  // BEW
 };
 
 #define TUNERATE 5 // how many LED frames per tunes advancement 
