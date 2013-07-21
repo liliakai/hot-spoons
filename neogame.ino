@@ -1312,7 +1312,7 @@ void demo_mode(){
   }
   */
   for(int i=0; i<r*25; i++) {
-    rainbow_strobe(20);
+    rainbow_strobe(100);
   }
   for(int i=0; i<r*50; i++) {
     rainbow_loop(10, 20);
@@ -1454,11 +1454,11 @@ void demo_mode(){
 void fb_loop() {
   if(debounce(B1, &b1prev)) {
     ledMode--;
-    ledMode %= 25;
+    ledMode %= 26;
   }
   if(debounce(B3, &b3prev)) {
     ledMode++;
-    ledMode %= 25;
+    ledMode %= 26;
   }
 
   sCmd.readSerial();     //-PROCESS SERIAL COMMANDS
@@ -1488,6 +1488,8 @@ void fb_loop() {
   if (ledMode == 22) { flame(); }                        //--- FLAME-ISH EFFECT
   if (ledMode == 23) { rainbow_vertical(10, 20); }       //--- VERITCAL RAINBOW
   if (ledMode == 24) { pacman(100); }                     //--- PACMAN
+  if (ledMode == 25) { rainbow_strobe(100); }                //---STRIP RAINBOW FADE
+  if (ledMode == 26) { pop_random(300, 20); }       //--- POP randomly
 
   if (ledMode == 98) { strip_march_ccw(100); }           //--- MARCH WHATEVERS ON THE STRIP NOW CC-W
   if (ledMode == 99) { strip_march_cw(100); }            //--- MARCH WHATEVERS ON THE STRIP NOW C-W
