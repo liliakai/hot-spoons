@@ -3,8 +3,10 @@
 #include <SerialCommand.h>
 #define SERIALCOMMAND_DEBUG 1
 #define NUM_LEDS 240
+#include "pitches.h"
 
 #define STRIPPIN 13
+#define TONEPIN 53  // which pin sound comes out of
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -29,6 +31,30 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 
 int mode = TIMING_MODE;
 
+#define TUNESIZE 7 // how many notes per tune
+int tunes[][TUNESIZE] = {
+  { NOTE_C4, NOTE_B4, NOTE_A4, NOTE_G3, NOTE_F3, NOTE_E3, NOTE_D3}, // PEW
+  { NOTE_A3, NOTE_B3, NOTE_C3, NOTE_D3, NOTE_E3, NOTE_F3, NOTE_C3}  // BEW
+};
+
+#define TUNERATE 5 // how many LED frames per tunes advancement 
+#define NONE -1 // no tune playing
+#define PEW 0 // this is one tune
+#define BEW 1 // this is another
+int whichTune = -1; // which tune we are playing right now
+int tunePosition = 0; // this increments every LED animation frame
+
+void makeNoise() {
+  if (whichTune > -1) { // if we are playing a tune
+    tone(TONEPIN, tunes[whichTune][tunePosition++ / TUNERATE]); // play at the appropriate rate
+    if (tunePosition / TUNERATE >= TUNESIZE) {
+      tunePosition = 0; // the song is over (can repeat or stop now)
+      // whichTune = NONE;  // the tune must stop (comment this out to repeat tune until...)
+    }
+  }
+    else noTone(TONEPIN); // there is no tune playing
+} // makeNoise()
+
 uint32_t c1, c2;
 int puck;
 int lockout;
@@ -52,7 +78,7 @@ void game_setup() {
 }
 
 void setup() {
-  pinMode(B1, INPUT);
+  pinMode(B1, INPUT); // pins default to inputs anyway
   pinMode(B2, INPUT);
   pinMode(B3, INPUT);
   digitalWrite(B1, HIGH);
@@ -123,7 +149,7 @@ boolean debounce(int button, int* prev) {
   *prev = newval;
 
   return (newval == 0) && (newval != oldval);
-}
+} // debounce(
 
 
 void handleButtons_freeplay() {
@@ -158,7 +184,6 @@ void handleButtons_timing() {
       return;
     }
   }
-
   if (b2fired || b1fired) return;
 
   if ( (b1 | b2) && (b1 ^ b2) ) {  // if one button is pressed
@@ -169,6 +194,7 @@ void handleButtons_timing() {
     else {  // we're firsted, who hit it 2nd?
       if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
         Serial.println("pew!");
+	whichTune = PEW;  // make the PEW noise!
         for (int i=0; i < SHOT; i++) {
           strip.setPixelColor(i, c1);  // b1 fires a shot from 0!
         }
@@ -177,6 +203,7 @@ void handleButtons_timing() {
       }
       else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
         Serial.println("bew!");
+	whichTune = BEW;  // make the BEW noise!
         for (int i=0; i < SHOT; i++) {
           strip.setPixelColor(strip.numPixels()-1-i, c2);  // b2 fires a shot from n-1!
         }
@@ -187,8 +214,8 @@ void handleButtons_timing() {
   }
 }  // handleButtons()
 
-
 void game_loop() {
+  makeNoise();
   game_step();
   if (mode == FREEPLAY_MODE) {
     handleButtons_freeplay();
@@ -1387,6 +1414,7 @@ void fb_loop() {
 void unrecognized(const char *command) {
   Serial.println("nothin fo ya...");
 }
+
 
 
 
