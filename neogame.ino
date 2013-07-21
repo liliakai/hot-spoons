@@ -961,7 +961,29 @@ void strip_march_ccw(int idelay) { //-MARCH STRIP C-W
   delay(idelay);
 }
 
+void pop_random(int ahue, int idelay) {
+  int acolor[3];
+  HSVtoRGB(ahue, 255, 255, acolor);
 
+  int ix = random(NUM_LEDS);
+  
+  for(int i = 0; i < NUM_LEDS; i++ ) {
+    if (i == ix) {
+      leds[i].r = acolor[0]; 
+      leds[i].g = acolor[1]; 
+      leds[i].b = acolor[2];
+    }
+    else {
+      leds[i].r = 0; 
+      leds[i].g = 0; 
+      leds[i].b = 0;
+    }
+  }
+
+  LEDS.show();  
+  delay(idelay);    
+
+}
 void pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO RIGHT UP THE RING
   int acolor[3];
   HSVtoRGB(ahue, 255, 255, acolor);
