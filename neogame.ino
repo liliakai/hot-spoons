@@ -507,10 +507,8 @@ void rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
   }
   int thisColor[3];
   HSVtoRGB(ihue, 255, 128, thisColor);
-  for(int idex = 0 ; idex < NUM_LEDS; idex++ ) {
-    set_color_led(idex,thisColor[0],thisColor[1],thisColor[2]); 
-  }
-  LEDS.show();    
+  one_color_allNOSHOW(thisColor[0],thisColor[1],thisColor[2]); 
+  LEDS.show();
   delay(idelay);
 }
 
