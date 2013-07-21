@@ -1265,7 +1265,7 @@ void demo_mode(){
   for(int i=0; i<r*5; i++) {
     rule30(100);
   }
-  for(int i=0; i<r*8; i++) {
+  for(int i=0; i<r*24; i++) {
     random_march(30);
   }
   for(int i=0; i<r*5; i++) {
