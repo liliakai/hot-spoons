@@ -907,7 +907,7 @@ void white_temps() {
 }
 
 
-void color_loop_vardelay() { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
+void color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
   idex++;
   if (idex > NUM_LEDS) {
     idex = 0;
@@ -916,9 +916,9 @@ void color_loop_vardelay() { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
   int acolor[3];
   HSVtoRGB(0, 255, 255, acolor);
 
-  int di = abs(TOP_INDEX - idex); //-DISTANCE TO CENTER    
+  int di = abs(iperiod - idex%iperiod); //-DISTANCE TO node
   //int t = constrain((10/di)*10, 10, 500); //-DELAY INCREASE AS INDEX APPROACHES CENTER (WITHIN LIMITS)
-  int t = constrain(50 * di / (NUM_LEDS/2), 10, 100);
+  int t = constrain(idelay * di / iperiod, 1, idelay);//-DELAY INCREASE AS INDEX APPROACHES node (WITHIN LIMITS)
 
   for(int i = 0; i < NUM_LEDS; i++ ) {
     if (i == idex) {
@@ -1392,7 +1392,7 @@ void demo_mode(){
   }
 
   for(int i=0; i<r*48; i++) {
-    color_loop_vardelay();
+    color_loop_vardelay(50, 200);
   }
   /*
   for(int i=0; i<r*5; i++) {
@@ -1482,7 +1482,7 @@ void fb_loop() {
   if (ledMode == 14) { random_march(30); }               //--- MARCH RANDOM COLORS
   if (ledMode == 15) { rwb_march(50); }                  //--- MARCH RWB COLORS
   if (ledMode == 16) { radiation(120, 60); }             //--- RADIATION SYMBOL (OR SOME APPROXIMATION)
-  if (ledMode == 17) { color_loop_vardelay(); }          //--- VARIABLE DELAY LOOP
+  if (ledMode == 17) { color_loop_vardelay(50, 200); }          //--- VARIABLE DELAY LOOP
   if (ledMode == 18) { white_temps(); }                  //--- WHITE TEMPERATURES
   if (ledMode == 19) { sin_bright_wave(240, 35); }       //--- SIN WAVE BRIGHTNESS
   if (ledMode == 20) { pop_horizontal(300, 20); }       //--- POP LEFT/RIGHT
