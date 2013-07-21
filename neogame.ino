@@ -708,15 +708,15 @@ void pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SATURATION ON ALL 
 void random_red() { //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMATA STARTED  
   int temprand;
   for(int i = 0; i < NUM_LEDS; i++ ) {
-    temprand = random(0,100);
-    if (temprand > 50) {
-      leds[i].r = 255;
+    for(int c=0; c < 2; c++) {
+        temprand = random(0,100);
+      if (temprand > 50) {
+        leds[i][c] = 255;
+      }
+      if (temprand <= 50) {
+        leds[i][c] = 0;
+      }
     }
-    if (temprand <= 50) {
-      leds[i].r = 0;
-    }
-    leds[i].b = 0; 
-    leds[i].g = 0;
   }
   LEDS.show();  
 }
@@ -730,29 +730,31 @@ void rule30(int idelay) { //1D CELLULAR AUTOMATA - RULE 30 (RED FOR NOW)
   for(int i = 0; i < NUM_LEDS; i++ ) {
     iCW = adjacent_cw(i);
     iCCW = adjacent_ccw(i);
-    if (ledsX[iCCW][0] > y && ledsX[i][0] > y && ledsX[iCW][0] > y) {
-      leds[i].r = 0;
-    }
-    if (ledsX[iCCW][0] > y && ledsX[i][0] > y && ledsX[iCW][0] <= y) {
-      leds[i].r = 0;
-    }
-    if (ledsX[iCCW][0] > y && ledsX[i][0] <= y && ledsX[iCW][0] > y) {
-      leds[i].r = 0;
-    }
-    if (ledsX[iCCW][0] > y && ledsX[i][0] <= y && ledsX[iCW][0] <= y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] > y && ledsX[iCW][0] > y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] > y && ledsX[iCW][0] <= y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] <= y && ledsX[iCW][0] > y) {
-      leds[i].r = 255;
-    }
-    if (ledsX[iCCW][0] <= y && ledsX[i][0] <= y && ledsX[iCW][0] <= y) {
-      leds[i].r = 0;
+    for (int c=0; c < 2; c++) {
+      if (ledsX[iCCW][c] > y && ledsX[i][c] > y && ledsX[iCW][c] > y) {
+        leds[i][c] = 0;
+      }
+      if (ledsX[iCCW][c] > y && ledsX[i][c] > y && ledsX[iCW][c] <= y) {
+        leds[i][c] = 0;
+      }
+      if (ledsX[iCCW][c] > y && ledsX[i][c] <= y && ledsX[iCW][c] > y) {
+        leds[i][c] = 0;
+      }
+      if (ledsX[iCCW][c] > y && ledsX[i][c] <= y && ledsX[iCW][c] <= y) {
+        leds[i][c] = 255;
+      }
+      if (ledsX[iCCW][c] <= y && ledsX[i][c] > y && ledsX[iCW][c] > y) {
+        leds[i][c] = 255;
+      }
+      if (ledsX[iCCW][c] <= y && ledsX[i][c] > y && ledsX[iCW][c] <= y) {
+        leds[i][c] = 255;
+      }
+      if (ledsX[iCCW][c] <= y && ledsX[i][c] <= y && ledsX[iCW][c] > y) {
+        leds[i][c] = 255;
+      }
+      if (ledsX[iCCW][c] <= y && ledsX[i][c] <= y && ledsX[iCW][c] <= y) {
+        leds[i][c] = 0;
+      }
     }
   }
 
