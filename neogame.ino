@@ -1,6 +1,8 @@
 #include <Adafruit_NeoPixel.h>
+#include "pitches.h"
 
 #define STRIPPIN 13
+#define TONEPIN 53  // which pin sound comes out of
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -16,6 +18,30 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 #define B3 A7
 
 #define TIMEWINDOW 20  // HOW MANY cycles is the time window
+
+#define TUNESIZE 7 // how many notes per tune
+int tunes[][TUNESIZE] = {
+  { NOTE_C4, NOTE_B4, NOTE_A4, NOTE_G3, NOTE_F3, NOTE_E3, NOTE_D3}, // PEW
+  { NOTE_A3, NOTE_B3, NOTE_C3, NOTE_D3, NOTE_E3, NOTE_F3, NOTE_C3}  // BEW
+};
+
+#define TUNERATE 5 // how many LED frames per tunes advancement 
+#define NONE -1 // no tune playing
+#define PEW 0 // this is one tune
+#define BEW 1 // this is another
+int whichTune = -1; // which tune we are playing right now
+int tunePosition = 0; // this increments every LED animation frame
+
+void makeNoise() {
+  if (whichTune > -1) { // if we are playing a tune
+    tone(TONEPIN, tunes[whichTune][tunePosition++ / TUNERATE]); // play at the appropriate rate
+    if (tunePosition / TUNERATE >= TUNESIZE) {
+      tunePosition = 0; // the song is over (can repeat or stop now)
+      // whichTune = NONE;  // the tune must stop (comment this out to repeat tune until...)
+    }
+  }
+    else noTone(TONEPIN); // there is no tune playing
+} // makeNoise()
 
 uint32_t c1, c2;
 int puck = strip.numPixels()/2;
@@ -53,11 +79,13 @@ void game_step() {
   if (strip.getPixelColor(puck-2)) {  // if red is just below puck, move puck up toward green
     strip.setPixelColor(puck-2, 0);  // erase shot
     b1fired--;  // the shot fired by b2 landed
+    whichTune = NONE;  // the tune must stop
     puck++;
   }
   if (strip.getPixelColor(puck+2)) { // if green is just above puck, move puck down toward red
     strip.setPixelColor(puck+2, 0);  // erase shot
     b2fired--;  // the shot fired by b2 landed
+    whichTune = NONE;  // the tune must stop
     puck--;
   }
 } // game_step()
@@ -96,6 +124,7 @@ void handleButtons() {
     else {  // we're firsted, who hit it 2nd?
       if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
         Serial.println("pew!");
+	whichTune = PEW;  // make the PEW noise!
         strip.setPixelColor(0, c1);  // b1 fires a shot from 0!
         strip.setPixelColor(1, c1);  // b1 fires a shot from 0!
         b1fired+=2;  // lock everything out until it's gone
@@ -103,6 +132,7 @@ void handleButtons() {
       }  
       else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
         Serial.println("bew!");
+	whichTune = BEW;  // make the BEW noise!
         strip.setPixelColor(strip.numPixels()-1, c2);  // b2 fires a shot from n-1!
         strip.setPixelColor(strip.numPixels()-2, c2);  // b2 fires a shot from n-1!
         b2fired+=2;  // lock everything out until it's gone
@@ -113,6 +143,7 @@ void handleButtons() {
 }  // handleButtons()
 
 void loop() {  
+  makeNoise();
   game_step();
   handleButtons();
   strip.show();

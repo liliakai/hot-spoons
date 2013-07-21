@@ -10,7 +10,9 @@ and shoot just before.
 V2.0 
 Each player uses their button to launch colored projectiles from their 
 end to push the white puck toward their opponent. If they launch 
-immediately before their opponent, they score a point.  
+immediately before their opponent, they score a point or two or three.
 If they launch and their opponent does NOT launch, their shot bounces 
 off their opponent's shield and scores a point for their opponent!
 
+V2.1
+Add pew() and bew() which are routines to make noises when scores.
