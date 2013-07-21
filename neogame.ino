@@ -1094,9 +1094,9 @@ void sin_bright_wave(int ahue, int idelay) {
     leds[i].g = acolor[1]; 
     leds[i].b = acolor[2];
 
+  }
     LEDS.show();    
     delay(idelay);
-  }
 }
 
 
@@ -1254,16 +1254,18 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
 
 void demo_mode(){
   int r = 10;
+  /*
   for(int i=0; i<r; i++) {
     one_color_all(255,255,255);
   }
+  */
   for(int i=0; i<r*25; i++) {
     rainbow_fade(20);
   }
-  for(int i=0; i<r*20; i++) {
+  for(int i=0; i<r*50; i++) {
     rainbow_loop(10, 20);
   }
-  for(int i=0; i<r*20; i++) {
+  for(int i=0; i<r*50; i++) {
     random_burst(20);
   }
   for(int i=0; i<r*12; i++) {
@@ -1272,45 +1274,51 @@ void demo_mode(){
   for(int i=0; i<r*12; i++) {
     color_bounceFADE(40);
   }
+  /*
   for(int i=0; i<r*5; i++) {
     police_lightsONE(40);
   }
   for(int i=0; i<r*5; i++) {
     police_lightsALL(40);
   }
+  */
   for(int i=0; i<r*35; i++) {
     flicker(200, 255);
   }
   for(int i=0; i<r*50; i++) {
     pulse_one_color_all(0, 10);
   }
+  /*
   for(int i=0; i<r*35; i++) {
-    pulse_one_color_all_rev(0, 10);
+    pulse_one_color_all_rev(128¨, 10);
   }
-  for(int i=0; i<r*5; i++) {
+  */
+  for(int i=0; i<r*15; i++) {
     fade_vertical(240, 60);
   }
   random_red();
   for(int i=0; i<r*5; i++) {
     rule30(100);
   }
-  for(int i=0; i<r*24; i++) {
+  for(int i=0; i<r*25; i++) {
     random_march(30);
   }
-  for(int i=0; i<r*5; i++) {
-    rwb_march(80);
+  for(int i=0; i<r*50; i++) {
+    rwb_march(30);
   }
   one_color_all(0,0,0);
   for(int i=0; i<r*15; i++) {
     radiation(120, 60);
   }
-  for(int i=0; i<r*15; i++) {
+  for(int i=0; i<r*10; i++) {
     color_loop_vardelay();
   }
+  /*
   for(int i=0; i<r*5; i++) {
     white_temps();
   }
-  for(int i=0; i<r; i++) {
+  */
+  for(int i=0; i<r*10; i++) {
     sin_bright_wave(240, 35);
   }
   for(int i=0; i<r*5; i++) {
@@ -1322,9 +1330,10 @@ void demo_mode(){
   for(int i=0; i<r*3; i++) {
     flame();
   }
+  /*
   for(int i=0; i<r*10; i++) {
     pacman(50);
-  }
+  */
   for(int i=0; i<r*15; i++) {
     rainbow_vertical(15, 50);
   }
@@ -1335,6 +1344,7 @@ void demo_mode(){
   for(int i=0; i<r*3; i++) {
     strip_march_cw(100);
   }
+  /*
   for(int i=0; i<r*2; i++) {
     one_color_all(255,0,0);
   }
@@ -1353,6 +1363,7 @@ void demo_mode(){
   for(int i=0; i<r*2; i++) {
     one_color_all(255,0,255);
   }
+  */
 }
 
 
