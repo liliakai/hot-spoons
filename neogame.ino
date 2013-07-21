@@ -996,9 +996,14 @@ void pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO RIGHT UP THE RI
   }
   else if (bouncedirection == 1) {
     bouncedirection = 0;
-    ix = horizontal_index(idex);
-    idex++;
     if (idex > TOP_INDEX) {
+	    ix = horizontal_index(idex);
+    }
+    else {
+	    ix = horizontal_index(idex - TOP_INDEX);
+    }
+    idex++;
+    if (idex >= NUM_LEDS) {
       idex = 0;
     }      
   }
@@ -1310,8 +1315,9 @@ void demo_mode(){
   for(int i=0; i<r*50; i++) {
     rainbow_loop(10, 20);
   }
-  for(int i=0; i<r*10; i++) {
+  for(int i=0; i<r*15; i++) {
     random_burst(20);
+    strip_march_cw(100);
   }
   /*
   for(int i=0; i<r*24; i++) {
