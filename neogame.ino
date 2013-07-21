@@ -1494,7 +1494,8 @@ void fb_loop() {
   if (ledMode == 24) { pacman(100); }                     //--- PACMAN
   if (ledMode == 25) { rainbow_strobe(100); }                //---STRIP RAINBOW FADE
   if (ledMode == 26) { pop_random(300, 20); }       //--- POP randomly
-
+  if (ledMode == 27) { random_red(); }       //randomize
+  
   if (ledMode == 98) { strip_march_ccw(100); }           //--- MARCH WHATEVERS ON THE STRIP NOW CC-W
   if (ledMode == 99) { strip_march_cw(100); }            //--- MARCH WHATEVERS ON THE STRIP NOW C-W
 
