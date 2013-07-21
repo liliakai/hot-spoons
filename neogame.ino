@@ -1407,8 +1407,12 @@ void demo_mode(){
     strip_march_cw(100);
   }
 
-  for(int i=0; i<r*40; i++) {
+  for(int i=0; i<r*12; i++) {
+    idex = 0;
     pop_horizontal(300, 100);
+  }
+  for(int i=0; i<r*12; i++) {
+    pop_random(300, 100);
   }
   /*
   for(int i=0; i<r*5; i++) {
