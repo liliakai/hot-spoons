@@ -493,6 +493,12 @@ void one_color_allNOSHOW(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE 
   }  
 }
 
+void rainbow_strobe(int idelay) {
+  rainbow_fade(idelay);
+  one_color_allNOSHOW(0, 0, 0);
+  LEDS.show();
+  delay(idelay);
+}
 
 void rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
   ihue++;
