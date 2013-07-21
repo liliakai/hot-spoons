@@ -476,7 +476,7 @@ void rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
     ihue = 0;
   }
   int thisColor[3];
-  HSVtoRGB(ihue, 255, 255, thisColor);
+  HSVtoRGB(ihue, 255, 128, thisColor);
   for(int idex = 0 ; idex < NUM_LEDS; idex++ ) {
     set_color_led(idex,thisColor[0],thisColor[1],thisColor[2]); 
   }
@@ -890,7 +890,7 @@ void color_loop_vardelay() { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
 
   int di = abs(TOP_INDEX - idex); //-DISTANCE TO CENTER    
   //int t = constrain((10/di)*10, 10, 500); //-DELAY INCREASE AS INDEX APPROACHES CENTER (WITHIN LIMITS)
-  int t = constrain(100 * di / (NUM_LEDS/2), 10, 100);
+  int t = constrain(50 * di / (NUM_LEDS/2), 10, 100);
 
   for(int i = 0; i < NUM_LEDS; i++ ) {
     if (i == idex) {
@@ -1264,13 +1264,15 @@ void demo_mode(){
   for(int i=0; i<r*50; i++) {
     rainbow_loop(10, 20);
   }
-  for(int i=0; i<r*30; i++) {
+  for(int i=0; i<r*10; i++) {
     random_burst(20);
   }
-  for(int i=0; i<r*12; i++) {
+  /*
+  for(int i=0; i<r*24; i++) {
     color_bounce(20);
   }
-  for(int i=0; i<r*12; i++) {
+  */
+  for(int i=0; i<r*48; i++) {
     color_bounceFADE(20);
   }
   /*
@@ -1282,7 +1284,7 @@ void demo_mode(){
   }
   */
   for(int i=0; i<r*35; i++) {
-    flicker(0, 255);
+    flicker(240, 255);
   }
   for(int i=0; i<r*50; i++) {
     pulse_one_color_all(0, 10);
@@ -1295,21 +1297,45 @@ void demo_mode(){
   for(int i=0; i<r*15; i++) {
     fade_vertical(240, 60);
   }
+  /*
   random_red();
   for(int i=0; i<r*5; i++) {
     rule30(100);
   }
+  
+  for(int i=0; i<r; i++) {
+    strip_march_ccw(100);
+  }
+  for(int i=0; i<r; i++) {
+    strip_march_cw(100);
+  }
+
   for(int i=0; i<r*25; i++) {
     random_march(30);
   }
-  for(int i=0; i<r*50; i++) {
+  */
+  for(int i=0; i<r*24; i++) {
     rwb_march(30);
   }
+  for(int i=0; i<r*3; i++) {
+    strip_march_ccw(100);
+  }
+  for(int i=0; i<r*3; i++) {
+    strip_march_cw(100);
+  }
+
   one_color_all(0,0,0);
   for(int i=0; i<r*15; i++) {
     radiation(120, 60);
   }
-  for(int i=0; i<r*10; i++) {
+  for(int i=0; i<r*3; i++) {
+    strip_march_ccw(100);
+  }
+  for(int i=0; i<r*3; i++) {
+    strip_march_cw(100);
+  }
+
+  for(int i=0; i<r*48; i++) {
     color_loop_vardelay();
   }
   /*
@@ -1320,12 +1346,21 @@ void demo_mode(){
   for(int i=0; i<r*10; i++) {
     sin_bright_wave(240, 35);
   }
+    for(int i=0; i<r*3; i++) {
+    strip_march_ccw(100);
+  }
+  for(int i=0; i<r*3; i++) {
+    strip_march_cw(100);
+  }
+
   for(int i=0; i<r*40; i++) {
     pop_horizontal(300, 100);
   }
+  /*
   for(int i=0; i<r*5; i++) {
     quad_bright_curve(240, 100);
   }
+  */
   for(int i=0; i<r; i++) {
     flame();
   }
@@ -1335,13 +1370,6 @@ void demo_mode(){
   */
   for(int i=0; i<r*15; i++) {
     rainbow_vertical(15, 50);
-  }
-
-  for(int i=0; i<r*3; i++) {
-    strip_march_ccw(100);
-  }
-  for(int i=0; i<r*3; i++) {
-    strip_march_cw(100);
   }
   /*
   for(int i=0; i<r*2; i++) {
