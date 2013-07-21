@@ -94,8 +94,12 @@ void setup() {
 }
 
 void game_step() {
+  uint32_t puck_color = strip.Color(128,128,128);
+  if (lockout) {
+    puck_color = strip.Color(0,0,255);
+  }
   for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
-    strip.setPixelColor(i, strip.Color(128, 128, 128));
+    strip.setPixelColor(i, puck_color);
   }
 
   for (int i=puck-PUCK_PADDING-1; i > -1; i--) {
@@ -171,46 +175,36 @@ void handleButtons_freeplay() {
 void handleButtons_timing() {
   boolean b1 = debounce(B1, &b1prev);
   boolean b2 = debounce(B3, &b3prev);
-  
-  if (lockout) {
-    lockout--;
-    if (!lockout)  {     // the firster didn't get seconded so they get punished!
-      if (locker == B1) {
+  if (!lockout) {
+      if (b1) {
         puck -= PENALTY; // punish the guilty (they pressed and were not seconded)
       }
-      else if (locker == B2) {
+      if (b2) {
         puck += PENALTY;
       }
       return;
-    }
   }
+
   if (b2fired || b1fired) return;
 
-  if ( (b1 | b2) && (b1 ^ b2) ) {  // if one button is pressed
-    if (lockout == 0) {
-      locker = b1 ? B1 : B2 ;  // say which button pin number locked (firsted) it
-      lockout = TIMEWINDOW;       // 20 is the count value for the time window
-    }
-    else {  // we're firsted, who hit it 2nd?
-      if ((locker == B1) && b2) {  // if B1 firsted it and b2 is pressed
+  if (lockout && (b1 || b2)) {
+      if (b1) {
         Serial.println("pew!");
 	whichTune = PEW;  // make the PEW noise!
         for (int i=0; i < SHOT; i++) {
           strip.setPixelColor(i, c1);  // b1 fires a shot from 0!
         }
         b1fired+=SHOT;  // lock everything out until it's gone
-        lockout = 0;
       }
-      else if ((locker == B2) && b1) {  // if B2 firsted it and b1 is pressed
+      if (b2) {
         Serial.println("bew!");
 	whichTune = BEW;  // make the BEW noise!
         for (int i=0; i < SHOT; i++) {
           strip.setPixelColor(strip.numPixels()-1-i, c2);  // b2 fires a shot from n-1!
         }
         b2fired+=SHOT;  // lock everything out until it's gone
-        lockout = 0;
       }
-    }
+      lockout = 0;
   }
 }  // handleButtons()
 
@@ -221,6 +215,12 @@ void game_loop() {
     handleButtons_freeplay();
   } 
   else {
+    if (!b1fired && !b2fired && !lockout && random(100) == 0) {
+      lockout = 100;
+    }
+    else if (lockout) {
+      lockout--;
+    }
     handleButtons_timing();
   }
   strip.show();
