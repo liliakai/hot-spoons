@@ -1316,7 +1316,7 @@ void demo_mode(){
   }
   */
   for(int i=0; i<r*25; i++) {
-    rainbow_fade(20);
+    rainbow_strobe(20);
   }
   for(int i=0; i<r*50; i++) {
     rainbow_loop(10, 20);
