@@ -29,7 +29,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 #define PENALTY 4
 #define PUCK_PADDING 1 // must be odd
 
-int mode = SPECTRUM_MODE;
+int mode = TIMING_MODE;
 
 #define TUNESIZE 7 // how many notes per tune
   // play notes from F#-0 (0x1E) to F#-5 (0x5A):
@@ -333,9 +333,9 @@ int ledsX[NUM_LEDS][3]; //-ARRAY FOR COPYING WHATS IN THE LED STRIP CURRENTLY (F
 
 SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
 
-//int ledMode = 888;      //-START IN DEMO MODE (THIS MODE BLOCKS OUT SERIAL COMMANDS FOR AWHILE)
+int ledMode = 888;      //-START IN DEMO MODE (THIS MODE BLOCKS OUT SERIAL COMMANDS FOR AWHILE)
 //int ledMode = 8;      //-START IN POLICE MODE
-int ledMode = 5;      //-START IN CYLON MODE
+//int ledMode = 5;      //-START IN CYLON MODE
 //int ledMode = 16;
 
 //-PERISTENT VARS
