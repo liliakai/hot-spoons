@@ -84,8 +84,8 @@ void game_setup() {
 int spectrumPin[SPECTS] = { A13, A14, A15 }; // what pin this spectrum is on
 int lastSpectrumRead[SPECTS] = { 0 }; // last time we read that value
 int spectrumRead[SPECTS]; // this time
-int spectrumThreshold[SPECTS] = { 200, 200, 200 }; // above this value is a beat
-int spectrumHysteresis[SPECTS] = { 20, 20, 20 }; // must be this much lower to end beat
+int spectrumThreshold[SPECTS] = { 200, 600, 400 }; // above this value is a beat
+int spectrumHysteresis[SPECTS] = { 20, 60, 40 }; // must be this much lower to end beat
 
 boolean spectrum(int spect) {
   spectrumRead[spect] = analogRead(spectrumPin[spect]);  // read the damn signal value
