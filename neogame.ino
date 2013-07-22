@@ -23,12 +23,13 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800)
 #define FREEPLAY_MODE 0
 #define FB_MODE 1
 #define TIMING_MODE 2
+#define SPECTRUM_MODE 3
 #define TIMEWINDOW 30
 #define SHOT 10
 #define PENALTY 4
 #define PUCK_PADDING 1 // must be odd
 
-int mode = TIMING_MODE;
+int mode = SPECTRUM_MODE;
 
 #define TUNESIZE 7 // how many notes per tune
   // play notes from F#-0 (0x1E) to F#-5 (0x5A):
@@ -180,6 +181,18 @@ boolean debounce(int button, int* prev) {
 } // debounce(
 
 
+void handleSpectrum () {
+  boolean b1 = debounce(B1, &b1prev) || spectrum(HIGH_SPECTRUM);
+  boolean b2 = debounce(B3, &b3prev) || spectrum(LOW_SPECTRUM);
+
+  if (b1) {
+   b1fire();
+  }
+  if (b2) {
+    b2fire();
+  }
+}
+
 void handleButtons_freeplay() {
   boolean b1 = digitalRead(B1);
   boolean b2 = digitalRead(B3);
@@ -213,24 +226,32 @@ void handleButtons_timing() {
 
   if (lockout && (b1 || b2)) {
       if (b1) {
-        Serial.println("pew!");
+       b1fire();
+      }
+      if (b2) {
+        b2fire();
+      }
+      lockout = 0;
+  }
+}  // handleButtons()
+
+void b1fire() {
+   Serial.println("pew!");
 	whichTune = PEW;  // make the PEW noise!
         for (int i=0; i < SHOT; i++) {
           strip.setPixelColor(i, c1);  // b1 fires a shot from 0!
         }
         b1fired+=SHOT;  // lock everything out until it's gone
-      }
-      if (b2) {
-        Serial.println("bew!");
+}
+
+void b2fire() {
+    Serial.println("bew!");
 	whichTune = BEW;  // make the BEW noise!
         for (int i=0; i < SHOT; i++) {
           strip.setPixelColor(strip.numPixels()-1-i, c2);  // b2 fires a shot from n-1!
         }
         b2fired+=SHOT;  // lock everything out until it's gone
-      }
-      lockout = 0;
-  }
-}  // handleButtons()
+}
 
 void game_loop() {
   makeNoise();
@@ -238,7 +259,7 @@ void game_loop() {
   if (mode == FREEPLAY_MODE) {
     handleButtons_freeplay();
   } 
-  else {
+  else if (mode == TIMING_MODE) {
     if (!b1fired && !b2fired && !lockout && random(150) == 0) {
       lockout = 500;
     }
@@ -247,12 +268,15 @@ void game_loop() {
     }
     handleButtons_timing();
   }
+  else if (mode == SPECTRUM_MODE) {
+    handleSpectrum();
+  }
   strip.show();
 }
 
 void loop() { 
   if (debounce(B2, &b2prev)) {
-    mode = (mode + 1) % 3;
+    mode = (mode + 1) % 4;
     setup();
   } 
 
