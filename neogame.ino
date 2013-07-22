@@ -1413,7 +1413,7 @@ void demo_mode(){
     strip_march_cw(100);
   }
 
-  for(int i=0; i<r*48; i++) {
+  for(int i=0; i<r*24; i++) {
     color_loop_vardelay(50, 200);
   }
   /*
