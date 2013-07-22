@@ -184,8 +184,8 @@ boolean debounce(int button, int* prev) {
 
 
 void handleSpectrum () {
-  boolean b1 = debounce(B1, &b1prev) || spectrum(HIGH_SPECTRUM);
-  boolean b2 = debounce(B3, &b3prev) || spectrum(LOW_SPECTRUM);
+  boolean b1 = debounce(B1, &b1prev) || spectrum(LOW_SPECTRUM);
+  boolean b2 = debounce(B3, &b3prev) || spectrum(HIGH_SPECTRUM);
 
   if (b1) {
    b1fire();
