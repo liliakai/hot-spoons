@@ -147,11 +147,13 @@ void game_step() {
   }
 
   if (puck == 0) {
-    flash(c2, 10, 100);
+    if (mode != SPECTRUM_MODE)
+      flash(c2, 10, 100);
     setup();
   }
   if (puck == strip.numPixels()-1) {
-    flash(c1, 10, 100);
+    if (mode != SPECTRUM_MODE)
+      flash(c1, 10, 100);
     setup();
   }
 }
