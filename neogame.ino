@@ -1279,8 +1279,8 @@ void fb_setup()
 {
 
 
-  Serial.begin(9600);      // SETUP HARDWARE SERIAL (USB)
-  //Serial.begin(115200);      // SETUP HARDWARE SERIAL (USB)
+  //Serial.begin(9600);      // SETUP HARDWARE SERIAL (USB)
+  Serial.begin(115200);      // SETUP HARDWARE SERIAL (USB)
 
   LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
 
