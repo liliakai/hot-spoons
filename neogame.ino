@@ -1430,9 +1430,8 @@ void demo_mode(){
   for(int i=0; i<r*3; i++) {
     strip_march_cw(100);
   }
-
+  idex = 0;
   for(int i=0; i<r*12; i++) {
-    idex = 0;
     pop_horizontal(300, 100);
   }
   for(int i=0; i<r*12; i++) {
