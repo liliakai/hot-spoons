@@ -65,7 +65,7 @@ int b1prev, b2prev, b3prev;
 
 
 void game_setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
@@ -78,9 +78,9 @@ void game_setup() {
   b2fired = 0;
 }
 #define SPECTS 3  // HOW MANY SPECTRUMS
-#define HIGH_SPECTRUM 1 // these signals are analog and are highest at the peak of the sound
-#define MID_SPECTRUM 2
-#define LOW_SPECTRUM 3
+#define HIGH_SPECTRUM 0 // these signals are analog and are highest at the peak of the sound
+#define MID_SPECTRUM 1
+#define LOW_SPECTRUM 2
 
 int spectrumPin[SPECTS] = { A13, A14, A15 }; // what pin this spectrum is on
 int lastSpectrumRead[SPECTS] = { 0 }; // last time we read that value
