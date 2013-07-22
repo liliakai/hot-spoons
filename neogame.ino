@@ -118,9 +118,9 @@ void setup() {
 }
 
 void game_step() {
-  uint32_t puck_color = strip.Color(128,128,128);
+  uint32_t puck_color = strip.Color(0,0,255);
   if (lockout) {
-    puck_color = strip.Color(0,0,255);
+    puck_color = strip.Color(128,128,128);
   }
   for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
     strip.setPixelColor(i, puck_color);
@@ -239,8 +239,8 @@ void game_loop() {
     handleButtons_freeplay();
   } 
   else {
-    if (!b1fired && !b2fired && !lockout && random(100) == 0) {
-      lockout = 100;
+    if (!b1fired && !b2fired && !lockout && random(150) == 0) {
+      lockout = 500;
     }
     else if (lockout) {
       lockout--;
