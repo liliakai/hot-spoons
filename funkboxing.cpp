@@ -809,6 +809,7 @@ void funkbox::flame() {
 
 
 void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH- 
+  static float tcount = 0.0;
   //int N2 = int(NUM_LEDS/2);
   int N3 = int(NUM_LEDS/3);
   int N6 = int(NUM_LEDS/6);  
@@ -843,6 +844,7 @@ void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH-
 
 
 void funkbox::sin_bright_wave(int ahue, int idelay) {  
+  static float tcount = 0.0;
   int acolor[3];
 
   for(int i = 0; i < NUM_LEDS; i++ ) {
@@ -912,6 +914,7 @@ void funkbox::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' THE LOOP
 
 
 void funkbox::pacman(int idelay) { //-MARCH STRIP C-W
+  static int lcount = 0;
   int s = int(NUM_LEDS/4);
   lcount++;
   if (lcount > 5) {
