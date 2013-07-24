@@ -176,9 +176,9 @@ void flash(uint32_t c, int times, int d) {
     }
     strip.show();
     delay(d);
-    for(uint16_t i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, 0);
-    }
+    fb.one_color_allNOSHOW(0,0,0);
+    LEDS.show();
+    delay(d);
     strip.show();
     delay(d);
 
