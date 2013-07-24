@@ -1016,7 +1016,7 @@ void funkbox::beat_march(int iwidth) {
 //------------------SETUP------------------
 void funkbox::setup()  
 {
-  one_color_all(0,0,0); //-BLANK STRIP
+  one_color_allNOSHOW(0,0,0); //-BLANK STRIP
   LEDS.show();  
 }
 
