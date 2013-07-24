@@ -4,33 +4,33 @@
 class funkbox {
 public:
 
-	int BOTTOM_INDEX; // = 0;
-	int TOP_INDEX; // = int(NUM_LEDS/2);
-	int EVENODD; // = NUM_LEDS%2;
-	int NUM_LEDS;
+  int BOTTOM_INDEX; // = 0;
+  int TOP_INDEX; // = int(NUM_LEDS/2);
+  int EVENODD; // = NUM_LEDS%2;
+  int NUM_LEDS;
 
-	struct CRGB* leds;
+  struct CRGB* leds;
 
-	int** ledsX; //-ARRAY FOR COPYING WHATS IN THE LED STRIP CURRENTLY (FOR CELL-AUTOMATA, ETC)
+  int** ledsX; //-ARRAY FOR COPYING WHATS IN THE LED STRIP CURRENTLY (FOR CELL-AUTOMATA, ETC)
 
 
-	int ledMode; // = 28;
+  int ledMode; // = 28;
 
-	int idex; // = 0;        //-LED INDEX (0 to NUM_LEDS-1
-	int idx_offset; // = 0;  //-OFFSET INDEX (BOTTOM LED TO ZERO WHEN LOOP IS TURNED/DOESN'T REALLY WORK)
-	int ihue; //= 0;        //-HUE (0-360)
-	int ibright; // = 0;     //-BRIGHTNESS (0-255)
-	int isat; // = 0;        //-SATURATION (0-255)
-	int bouncedirection; // = 0;  //-SWITCH FOR COLOR BOUNCE (0-1)
-	float tcount; // = 0.0;      //-INC VAR FOR SIN LOOPS
-	int lcount; // = 0;      //-ANOTHER COUNTING VAR
+  int idex; // = 0;        //-LED INDEX (0 to NUM_LEDS-1
+  int idx_offset; // = 0;  //-OFFSET INDEX (BOTTOM LED TO ZERO WHEN LOOP IS TURNED/DOESN'T REALLY WORK)
+  int ihue; //= 0;        //-HUE (0-360)
+  int ibright; // = 0;     //-BRIGHTNESS (0-255)
+  int isat; // = 0;        //-SATURATION (0-255)
+  int bouncedirection; // = 0;  //-SWITCH FOR COLOR BOUNCE (0-1)
+  float tcount; // = 0.0;      //-INC VAR FOR SIN LOOPS
+  int lcount; // = 0;      //-ANOTHER COUNTING VAR
 
-	funkbox(int n);
+  funkbox(int n);
   void loop();
   void setup();
-	void set_color_led(int adex, int cred, int cgrn, int cblu);
+  void set_color_led(int adex, int cred, int cgrn, int cblu);
   int horizontal_index(int i);
-	int antipodal_index(int i);
+  int antipodal_index(int i);
   int adjacent_cw(int i);
   int adjacent_ccw(int i);
   void HSVtoRGB(int hue, int sat, int val, int colors[3]);
@@ -69,5 +69,5 @@ public:
   void beat_march(int iwidth) ;
   void set_mode_strip() ;    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO WORK RIGHT
   void demo_mode();
-	void set_mode(int newMode);
+  void set_mode(int newMode);
 };
