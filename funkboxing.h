@@ -65,7 +65,6 @@ public:
   void rainbow_vertical(int istep, int idelay) ; //-RAINBOW 'UP' THE LOOP
   void pacman(int idelay) ; //-MARCH STRIP C-W
   void beat_march(int iwidth) ;
-  void set_mode_strip() ;    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO WORK RIGHT
   void demo_mode();
   void set_mode(int newMode);
 };
