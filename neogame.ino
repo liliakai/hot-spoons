@@ -113,12 +113,19 @@ void setup() {
   digitalWrite(B2, HIGH);
   digitalWrite(B3, HIGH);
 
+  Serial.begin(115200);      // SETUP HARDWARE SERIAL (USB)
+
+  sCmd.addCommand("m",   set_mode_strip);
+  sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+
   if (mode == FB_MODE) {
-    fb_setup();
+    fb.setup();  
   } 
   else {
     game_setup();
   }
+  
+  Serial.println("---SETUP COMPLETE---");
 }
 
 void game_step() {
@@ -291,20 +298,6 @@ void loop() {
   else {
     game_loop();
   }
-}
-
-//------------------SETUP------------------
-void fb_setup()  
-{
-  Serial.begin(115200);      // SETUP HARDWARE SERIAL (USB)
-
-  sCmd.addCommand("m",   set_mode_strip);
-  sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
-
-  fb.one_color_all(0,0,0); //-BLANK STRIP
-
-  LEDS.show();  
-  Serial.println("---SETUP COMPLETE---");
 }
 
 void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO WORK RIGHT
