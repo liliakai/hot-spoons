@@ -2,6 +2,7 @@
 #include <FastSPI_LED2.h>
 #include <SerialCommand.h>
 #include "funkboxing.h"
+#include "button.h"
 
 #define SERIALCOMMAND_DEBUG 1
 #define NUM_LEDS 240
@@ -66,7 +67,9 @@ int lockout;
 int locker;
 int b1fired, b2fired;
 int b1prev, b2prev, b3prev;
-
+Button button1 = Button(B1);
+Button button2 = Button(B2);
+Button button3 = Button(B3);
 
 void game_setup() {
   Serial.begin(115200);
@@ -107,13 +110,6 @@ boolean spectrum(int spect) {
 }
 
 void setup() {
-  pinMode(B1, INPUT); // pins default to inputs anyway
-  pinMode(B2, INPUT);
-  pinMode(B3, INPUT);
-  digitalWrite(B1, HIGH);
-  digitalWrite(B2, HIGH);
-  digitalWrite(B3, HIGH);
-
   Serial.begin(115200);      // SETUP HARDWARE SERIAL (USB)
 
   sCmd.addCommand("m",   set_mode_strip);
@@ -195,8 +191,8 @@ boolean debounce(int button, int* prev) {
 
 
 void handleSpectrum () {
-  boolean b1 = debounce(B1, &b1prev) || spectrum(LOW_SPECTRUM);
-  boolean b2 = debounce(B3, &b3prev) || spectrum(HIGH_SPECTRUM);
+  boolean b1 = button1.pressed() || spectrum(LOW_SPECTRUM);
+  boolean b2 = button3.pressed() || spectrum(HIGH_SPECTRUM);
 
   if (b1) {
    b1fire();
@@ -207,8 +203,8 @@ void handleSpectrum () {
 }
 
 void handleButtons_freeplay() {
-  boolean b1 = digitalRead(B1);
-  boolean b2 = digitalRead(B3);
+  boolean b1 = button1.read();
+  boolean b2 = button2.read();
   if (b1 == 0) {  
     Serial.println("pew!");
     strip.setPixelColor(0, c1);
@@ -223,8 +219,8 @@ void handleButtons_freeplay() {
 
 
 void handleButtons_timing() {
-  boolean b1 = debounce(B1, &b1prev);
-  boolean b2 = debounce(B3, &b3prev);
+  boolean b1 = button1.pressed();
+  boolean b2 = button3.pressed();
   if (!lockout) {
       if (b1) {
         puck -= PENALTY; // punish the guilty (they pressed and were not seconded)
@@ -288,7 +284,7 @@ void game_loop() {
 }
 
 void loop() { 
-  if (debounce(B2, &b2prev)) {
+  if (button2.pressed()) {
     mode = (mode + 1) % 4;
     setup();
   } 
@@ -314,10 +310,10 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
 
 //------------------MAIN LOOP------------------
 void fb_loop() {
-  if(debounce(B1, &b1prev)) {
+  if(button1.pressed()) {
     fb.set_mode((fb.ledMode-1) % 28);
   }
-  if(debounce(B3, &b3prev)) {
+  if(button3.pressed()) {
     fb.set_mode((fb.ledMode+1) % 28);
   }
 
