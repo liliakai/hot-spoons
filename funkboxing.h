@@ -65,4 +65,5 @@ public:
   void beat_march(int iwidth) ;
   void demo_mode();
   void set_mode(int newMode);
+  void strip_march_iw();
 };

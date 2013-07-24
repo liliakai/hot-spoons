@@ -675,6 +675,18 @@ void funkbox::strip_march_ccw(int idelay) { //-MARCH STRIP C-W
   delay(idelay);
 }
 
+void funkbox::strip_march_iw() { //-MARCH STRIP inward toward center
+  for(int i = NUM_LEDS/2; i > 0; i-- ) {
+    leds[i] = leds[i-1];
+  }
+  leds[0] = 0;
+  for(int i = NUM_LEDS/2+1+EVENODD; i < NUM_LEDS-1; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
+    leds[i] = leds[i+1];
+  }
+  leds[NUM_LEDS-1] = 0;
+}
+
+
 void funkbox::pop_random(int ahue, int idelay) {
   int acolor[3];
   HSVtoRGB(ahue, 255, 255, acolor);
