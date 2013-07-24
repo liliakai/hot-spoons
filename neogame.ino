@@ -2,23 +2,12 @@
 #include <FastSPI_LED2.h>
 #include <SerialCommand.h>
 #include "funkboxing.h"
+
 #define SERIALCOMMAND_DEBUG 1
 #define NUM_LEDS 240
-
 #define DATA_PIN 13
 #define TONEPIN 53  // which pin sound comes out of
 
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-//   NEO_RGB     Pixels are wired for RGB bitstream
-//   NEO_GRB     Pixels are wired for GRB bitstream
-//   NEO_KHZ400  400 KHz bitstream (e.g. FLORA pixels)
-//   NEO_KHZ800  800 KHz bitstream (e.g. High Density LED strip)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, DATA_PIN, NEO_GRB + NEO_KHZ800);
-funkbox fb = funkbox(NUM_LEDS);
-
-SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
 #define B1 A6
 #define B2 A7
 #define B3 A8
@@ -31,6 +20,18 @@ SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
 #define SHOT 10
 #define PENALTY 4
 #define PUCK_PADDING 1 // must be odd
+
+// Parameter 1 = number of pixels in strip
+// Parameter 2 = pin number (most are valid)
+// Parameter 3 = pixel type flags, add together as needed:
+//   NEO_RGB     Pixels are wired for RGB bitstream
+//   NEO_GRB     Pixels are wired for GRB bitstream
+//   NEO_KHZ400  400 KHz bitstream (e.g. FLORA pixels)
+//   NEO_KHZ800  800 KHz bitstream (e.g. High Density LED strip)
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, DATA_PIN, NEO_GRB + NEO_KHZ800);
+funkbox fb = funkbox(NUM_LEDS);
+
+SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
 
 int mode = FB_MODE;
 
