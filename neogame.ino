@@ -315,12 +315,10 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
 //------------------MAIN LOOP------------------
 void fb_loop() {
   if(debounce(B1, &b1prev)) {
-    fb.ledMode--;
-    fb.ledMode %= 28;
+    fb.set_mode((fb.ledMode-1) % 28);
   }
   if(debounce(B3, &b3prev)) {
-    fb.ledMode++;
-    fb.ledMode %= 28;
+    fb.set_mode((fb.ledMode+1) % 28);
   }
 
   sCmd.readSerial();     //-PROCESS SERIAL COMMANDS
