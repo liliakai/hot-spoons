@@ -311,15 +311,21 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
 //------------------MAIN LOOP------------------
 void fb_loop() {
   if(button1.pressed()) {
-    fb.set_mode((fb.ledMode-1) % 28);
+    set_fb_mode((fb.ledMode-1) % 28);
   }
   if(button3.pressed()) {
-    fb.set_mode((fb.ledMode+1) % 28);
+    set_fb_mode((fb.ledMode+1) % 28);
   }
 
   sCmd.readSerial();     //-PROCESS SERIAL COMMANDS
 
   fb.loop();
+}
+
+void set_fb_mode(int mode) {
+  fb.set_mode(mode);
+  Serial.print("~~~***NEW MODE-");
+  Serial.println(fb.ledMode);
 }
 
 
