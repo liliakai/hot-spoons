@@ -1,12 +1,10 @@
 #include "button.h"
-Button::Button(int p) : pin(p) {
+Button::Button(int p) : pin(p), oldval(false) {
         pinMode(p, INPUT);
         digitalWrite(p, HIGH);
 }
 
 boolean Button::pressed() {
-        static boolean oldval = false;
-
         boolean newval = read();
         boolean ret = (newval == 0) && (newval != oldval);
 
