@@ -4,26 +4,24 @@
 class funkbox {
 public:
 
-  int BOTTOM_INDEX; // = 0;
-  int TOP_INDEX; // = int(NUM_LEDS/2);
-  int EVENODD; // = NUM_LEDS%2;
+  int BOTTOM_INDEX;
+  int TOP_INDEX;
+  int EVENODD;
   int NUM_LEDS;
 
   struct CRGB* leds;
+  int** ledsX;
 
-  int** ledsX; //-ARRAY FOR COPYING WHATS IN THE LED STRIP CURRENTLY (FOR CELL-AUTOMATA, ETC)
+  int ledMode;
 
-
-  int ledMode; // = 28;
-
-  int idex; // = 0;        //-LED INDEX (0 to NUM_LEDS-1
-  int idx_offset; // = 0;  //-OFFSET INDEX (BOTTOM LED TO ZERO WHEN LOOP IS TURNED/DOESN'T REALLY WORK)
-  int ihue; //= 0;        //-HUE (0-360)
-  int ibright; // = 0;     //-BRIGHTNESS (0-255)
-  int isat; // = 0;        //-SATURATION (0-255)
-  int bouncedirection; // = 0;  //-SWITCH FOR COLOR BOUNCE (0-1)
   float tcount; // = 0.0;      //-INC VAR FOR SIN LOOPS
   int lcount; // = 0;      //-ANOTHER COUNTING VAR
+  int idex;             //-LED INDEX (0 to NUM_LEDS-1
+  int idx_offset;       //-OFFSET INDEX (BOTTOM LED TO ZERO WHEN LOOP IS TURNED/DOESN'T REALLY WORK)
+  int ihue;             //-HUE (0-360)
+  int ibright;          //-BRIGHTNESS (0-255)
+  int isat;             //-SATURATION (0-255)
+  int bouncedirection;  //-SWITCH FOR COLOR BOUNCE (0-1)
 
   funkbox(int n);
   void loop();
