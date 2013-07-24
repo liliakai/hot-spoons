@@ -5,7 +5,7 @@
 #define SERIALCOMMAND_DEBUG 1
 #define NUM_LEDS 240
 
-#define STRIPPIN 13
+#define DATA_PIN 13
 #define TONEPIN 53  // which pin sound comes out of
 
 // Parameter 1 = number of pixels in strip
@@ -15,8 +15,8 @@
 //   NEO_GRB     Pixels are wired for GRB bitstream
 //   NEO_KHZ400  400 KHz bitstream (e.g. FLORA pixels)
 //   NEO_KHZ800  800 KHz bitstream (e.g. High Density LED strip)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(240, STRIPPIN, NEO_GRB + NEO_KHZ800);
-funkbox fb = funkbox(240);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, DATA_PIN, NEO_GRB + NEO_KHZ800);
+funkbox fb = funkbox(NUM_LEDS);
 
 SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
 #define B1 A6
