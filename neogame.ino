@@ -34,7 +34,7 @@ funkbox fb = funkbox(NUM_LEDS);
 
 SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
 
-int mode = FB_MODE;
+int mode = TIMING_MODE;
 
 #define TUNESIZE 7 // how many notes per tune
   // play notes from F#-0 (0x1E) to F#-5 (0x5A):
@@ -61,7 +61,7 @@ void makeNoise() {
     else noTone(TONEPIN); // there is no tune playing
 } // makeNoise()
 
-uint32_t c1, c2;
+CRGB color1, color2;
 int puck;
 int lockout;
 int locker;
@@ -76,9 +76,9 @@ void game_setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
 
-  c1 = strip.Color(255, 0, 0);
-  c2 = strip.Color(0, 255, 0);
-  puck = strip.numPixels()/2;
+  color1 = CRGB(255, 0, 0);
+  color2 = CRGB(0, 255, 0);
+  puck = NUM_LEDS/2;
   lockout = 0;
   locker = 0;
   b1fired = 0;
@@ -119,6 +119,7 @@ void setup() {
     fb.setup();  
   } 
   else {
+    fb.setup();
     game_setup();
   }
   
@@ -126,48 +127,51 @@ void setup() {
 }
 
 void game_step() {
-  uint32_t puck_color = strip.Color(0,0,255);
+  CRGB puck_color = CRGB(0,0,255);
   if (lockout) {
-    puck_color = strip.Color(128,128,128);
+    puck_color = CRGB(128,128,128);
   }
+
   for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
-    strip.setPixelColor(i, puck_color);
+    fb.leds[i] = puck_color;
   }
 
-  for (int i=puck-PUCK_PADDING-1; i > -1; i--) {
-    strip.setPixelColor(i, strip.getPixelColor(i-1));
+  for (int i=puck-PUCK_PADDING-1; i > 0; i--) {
+    fb.leds[i] = fb.leds[i-1];
   }
-  for (int i=puck+PUCK_PADDING+1; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, strip.getPixelColor(i+1));
+  fb.set_color_led(0, 0, 0, 0);
+  for (int i=puck+PUCK_PADDING+1; i < NUM_LEDS-1; i++) {
+    fb.leds[i] = fb.leds[i+1];
   }
+  fb.set_color_led(NUM_LEDS-1, 0, 0, 0);
 
-  if (strip.getPixelColor(puck-PUCK_PADDING-1)) {
-    strip.setPixelColor(puck-PUCK_PADDING-1, 0);
-    if (b1fired) b1fired--; 
-    
+  if (fb.leds[puck-PUCK_PADDING-1] != CRGB(0)) {
+    fb.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
+    if (b1fired) b1fired--;
+
     puck++;
   }
-  if (strip.getPixelColor(puck+PUCK_PADDING+1)) {
-    strip.setPixelColor(puck+PUCK_PADDING+1, 0);
+  if (fb.leds[puck+PUCK_PADDING+1] != CRGB(0)) {
+    fb.set_color_led(puck+PUCK_PADDING+1, 0, 0, 0);
     if (b2fired) b2fired--;
     puck--;
   }
 
   if (puck == 0) {
     if (mode != SPECTRUM_MODE)
-      flash(c2, 10, 100);
+      flash(color2, 10, 100);
     setup();
   }
-  if (puck == strip.numPixels()-1) {
+  if (puck == NUM_LEDS-1) {
     if (mode != SPECTRUM_MODE)
-      flash(c1, 10, 100);
+      flash(color1, 10, 100);
     setup();
   }
 }
 
-void flash(uint32_t c, int times, int d) {
+void flash(CRGB color, int times, int d) {
   for (int j=0; j < times; j++) {
-    fb.one_color_allNOSHOW(CRGB(c));
+    fb.one_color_allNOSHOW(color.r, color.g, color.b);
     LEDS.show();
     delay(d);
 
@@ -176,8 +180,6 @@ void flash(uint32_t c, int times, int d) {
     delay(d);
   }
 }
-
-
 
 void handleSpectrum () {
   boolean b1 = button1.pressed() || spectrum(LOW_SPECTRUM);
@@ -196,12 +198,12 @@ void handleButtons_freeplay() {
   boolean b2 = button2.read();
   if (b1 == 0) {  
     Serial.println("pew!");
-    strip.setPixelColor(0, c1);
+    fb.leds[0] = color1;
   }  
 
   if (b2 == 0) {
     Serial.println("bew!");
-    strip.setPixelColor(strip.numPixels()-1, c2);
+    fb.leds[NUM_LEDS-1] = color2;
   }
 
 } 
@@ -234,19 +236,19 @@ void handleButtons_timing() {
 }  // handleButtons()
 
 void b1fire() {
-   Serial.println("pew!");
-	whichTune = PEW;  // make the PEW noise!
+  Serial.println("pew!");
+  whichTune = PEW;  // make the PEW noise!
         for (int i=0; i < SHOT; i++) {
-          strip.setPixelColor(i, c1);  // b1 fires a shot from 0!
+          fb.leds[i] = color1; // b1 fires a shot from 0!
         }
         b1fired+=SHOT;  // lock everything out until it's gone
 }
 
 void b2fire() {
-    Serial.println("bew!");
-	whichTune = BEW;  // make the BEW noise!
+  Serial.println("bew!");
+  whichTune = BEW;  // make the BEW noise!
         for (int i=0; i < SHOT; i++) {
-          strip.setPixelColor(strip.numPixels()-1-i, c2);  // b2 fires a shot from n-1!
+          fb.leds[NUM_LEDS-1-i] = color2; // b2 fires a shot from n-1!
         }
         b2fired+=SHOT;  // lock everything out until it's gone
 }
@@ -256,9 +258,9 @@ void game_loop() {
   game_step();
   if (mode == FREEPLAY_MODE) {
     handleButtons_freeplay();
-  } 
+  }
   else if (mode == TIMING_MODE) {
-    if (!b1fired && !b2fired && !lockout && random(150) == 0) {
+    if (!b1fired && !b2fired && !lockout && random(250) == 0) {
       lockout = 500;
     }
     else if (lockout) {
@@ -269,7 +271,7 @@ void game_loop() {
   else if (mode == SPECTRUM_MODE) {
     handleSpectrum();
   }
-  strip.show();
+  LEDS.show();
 }
 
 void loop() { 
