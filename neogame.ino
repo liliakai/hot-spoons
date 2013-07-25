@@ -22,14 +22,6 @@
 #define PENALTY 4
 #define PUCK_PADDING 1 // must be odd
 
-// Parameter 1 = number of pixels in strip
-// Parameter 2 = pin number (most are valid)
-// Parameter 3 = pixel type flags, add together as needed:
-//   NEO_RGB     Pixels are wired for RGB bitstream
-//   NEO_GRB     Pixels are wired for GRB bitstream
-//   NEO_KHZ400  400 KHz bitstream (e.g. FLORA pixels)
-//   NEO_KHZ800  800 KHz bitstream (e.g. High Density LED strip)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, DATA_PIN, NEO_GRB + NEO_KHZ800);
 funkbox fb = funkbox(NUM_LEDS);
 
 SerialCommand sCmd;     //-SETUP SerialCommand OBJECT
@@ -61,7 +53,8 @@ void makeNoise() {
     else noTone(TONEPIN); // there is no tune playing
 } // makeNoise()
 
-CRGB color1, color2;
+CRGB color1 = CRGB(255, 0, 0);
+CRGB color2 = CRGB(0, 255, 0);
 int puck;
 int lockout;
 int locker;
@@ -72,13 +65,7 @@ Button button2 = Button(B2);
 Button button3 = Button(B3);
 
 void game_setup() {
-  Serial.begin(115200);
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
-
-  color1 = CRGB(255, 0, 0);
-  color2 = CRGB(0, 255, 0);
-  puck = NUM_LEDS/2;
+  puck = NUM_LEDS/2 + 1;
   lockout = 0;
   locker = 0;
   b1fired = 0;
@@ -115,14 +102,12 @@ void setup() {
   sCmd.addCommand("m",   set_mode_strip);
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
 
-  if (mode == FB_MODE) {
-    fb.setup();  
-  } 
-  else {
-    fb.setup();
+  fb.setup();
+
+  if (mode != FB_MODE) {
     game_setup();
   }
-  
+
   Serial.println("---SETUP COMPLETE---");
 }
 
