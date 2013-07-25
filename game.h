@@ -13,7 +13,7 @@ class game {
 
 public:
 
-  int NUM_LEDS;
+  int num_leds;
   int mode;
   int puck;
   int lockout;
@@ -23,13 +23,13 @@ public:
   Button& button1, button2;
 
   game(int n, funkbox& fbref, Button& b1, Button& b2)
-    : NUM_LEDS(n), fb(fbref), button1(b1), button2(b2) {
+    : num_leds(n), fb(fbref), button1(b1), button2(b2) {
     setup();
   }
 
-  void setup(int gameMode) {
-    mode = gameMode;
-    puck = NUM_LEDS/2 + 1;
+  void setup(int gameMode=-1) {
+    if (gameMode >=0) mode = gameMode;
+    puck = num_leds/2 + 1;
     lockout = 0;
     b1fired = 0;
     b2fired = 0;
@@ -50,10 +50,10 @@ public:
     }
     fb.set_color_led(0, 0, 0, 0);
 
-    for (int i=puck+PUCK_PADDING+1; i < NUM_LEDS-1; i++) {
+    for (int i=puck+PUCK_PADDING+1; i < num_leds-1; i++) {
       fb.leds[i] = fb.leds[i+1];
     }
-    fb.set_color_led(NUM_LEDS-1, 0, 0, 0);
+    fb.set_color_led(num_leds-1, 0, 0, 0);
 
     if (fb.leds[puck-PUCK_PADDING-1] != CRGB(0)) {
       fb.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
@@ -74,7 +74,7 @@ public:
       setup();
     }
 
-    if (puck == NUM_LEDS-1) {
+    if (puck == num_leds-1) {
       if (mode != SPECTRUM_MODE)
         fb.flash(color1, 10, 100);
       setup();
@@ -163,7 +163,7 @@ public:
     Serial.println("bew!");
     whichTune = BEW;  // make the BEW noise!
     for (int i=0; i < SHOT; i++) {
-      fb.leds[NUM_LEDS-1-i] = color2; // b2 fires a shot from n-1!
+      fb.leds[num_leds-1-i] = color2; // b2 fires a shot from n-1!
     }
     b2fired+=SHOT;  // lock everything out until it's gone
   }
