@@ -1,5 +1,4 @@
 #include <FastSPI_LED2.h>
-#include <SerialCommand.h>
 
 class funkbox {
 public:
@@ -15,7 +14,6 @@ public:
   int ledMode;
 
   int idex;             //-LED INDEX (0 to NUM_LEDS-1
-  int idx_offset;       //-OFFSET INDEX (BOTTOM LED TO ZERO WHEN LOOP IS TURNED/DOESN'T REALLY WORK)
   int ihue;             //-HUE (0-360)
   int ibright;          //-BRIGHTNESS (0-255)
   int isat;             //-SATURATION (0-255)

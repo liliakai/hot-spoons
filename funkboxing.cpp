@@ -31,19 +31,11 @@ funkbox::funkbox(int n) : NUM_LEDS(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(
 }
 
 //-SET THE COLOR OF A SINGLE RGB LED
-void funkbox::set_color_led(int adex, int cred, int cgrn, int cblu) {  
-  int bdex;
+void funkbox::set_color_led(int idex, int cred, int cgrn, int cblu) {
 
-  if (idx_offset > 0) {  //-APPLY INDEX OFFSET 
-    bdex = (adex + idx_offset) % NUM_LEDS;
-  }
-  else {
-    bdex = adex;
-  }
-
-  leds[bdex].r = cred;
-  leds[bdex].g = cgrn;
-  leds[bdex].b = cblu;  
+  leds[idex].r = cred;
+  leds[idex].g = cgrn;
+  leds[idex].b = cblu;
 }
 
 
