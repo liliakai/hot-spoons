@@ -33,10 +33,6 @@ void setup() {
   Serial.println("---SETUP COMPLETE---");
 }
 
-void game_loop() {
-  g.step();
-}
-
 void loop() {
   if (button2.pressed()) {
     mode = (mode + 1) % 4;
@@ -47,7 +43,7 @@ void loop() {
     fb_loop();
   }
   else {
-    game_loop();
+    g.loop();
   }
 }
 

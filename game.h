@@ -37,7 +37,7 @@ public:
     b2fired = 0;
   }
 
-  void step() {
+  void loop() {
     makeNoise();
     CRGB puck_color = CRGB(0,0,255);
     if (lockout) {
