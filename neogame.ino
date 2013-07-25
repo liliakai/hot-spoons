@@ -5,11 +5,9 @@
 #include "button.h"
 #include "noise.h"
 #include "spectrum.h"
-
 #include "game.h"
 
 #define SERIALCOMMAND_DEBUG 1
-#define DATA_PIN 13
 #define FB_MODE 3
 
 #define NUM_LEDS 240

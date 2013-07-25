@@ -1,12 +1,3 @@
-/*
- ### FAST_SPI2 LED FX EXAMPLES
- ### TESTED WITH WS2811 USING ARDUINO MEGA 2650
- 
- ### LICENSE:::USE FOR WHATEVER YOU WANT, WHENEVER YOU WANT, WHYEVER YOU WANT
- ### BUT YOU MUST YODEL ONCE FOR FREEDOM AND MAYBE DONATE TO SOMETHING WORTHWHILE
- --------------------------------------------------------------------------------------------------
- */
-
 /*----------------------------------------------------|
  |                                                     |
  |           FROM THE FAST_SPI2 EXAMPLE FILE           |
@@ -24,6 +15,7 @@
 #include "funkboxing.h"
 
 #define DEFAULT_LED_MODE 5
+#define DATA_PIN 13
 
 funkbox::funkbox(int n) : NUM_LEDS(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
 	ledMode(DEFAULT_LED_MODE)
@@ -34,7 +26,7 @@ funkbox::funkbox(int n) : NUM_LEDS(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(
 		ledsX[i] = new int[3];
 	}
 
-	LEDS.addLeds<WS2811, 13, GRB>(leds, NUM_LEDS);
+	LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);
 	LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
 }
 
