@@ -17,16 +17,16 @@
 #define DEFAULT_LED_MODE 5
 #define DATA_PIN 13
 
-funkbox::funkbox(int n) : NUM_LEDS(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
+funkbox::funkbox(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
 	ledMode(DEFAULT_LED_MODE)
 {
-	leds = new CRGB[NUM_LEDS];
-	ledsX = new int*[NUM_LEDS];
-	for (int i=0; i < NUM_LEDS; ++i) {
+	leds = new CRGB[num_leds];
+	ledsX = new int*[num_leds];
+	for (int i=0; i < num_leds; ++i) {
 		ledsX[i] = new int[3];
 	}
 
-	LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, NUM_LEDS);
+	LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, num_leds);
 	LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
 }
 
@@ -51,15 +51,15 @@ int funkbox::horizontal_index(int i) {
   if (i == TOP_INDEX && EVENODD == 0) {
     return TOP_INDEX;
   }
-  return NUM_LEDS - i;  
+  return num_leds - i;
 }
 
 //-FIND INDEX OF ANTIPODAL OPPOSITE LED
 int funkbox::antipodal_index(int i) {
-  //int N2 = int(NUM_LEDS/2);
+  //int N2 = int(num_leds/2);
   int iN = i + TOP_INDEX;
   if (i >= TOP_INDEX) {
-    iN = ( i + TOP_INDEX ) % NUM_LEDS; 
+    iN = ( i + TOP_INDEX ) % num_leds;
   }
   return iN;
 }
@@ -68,7 +68,7 @@ int funkbox::antipodal_index(int i) {
 //-FIND ADJACENT INDEX CLOCKWISE
 int funkbox::adjacent_cw(int i) {
   int r;
-  if (i < NUM_LEDS - 1) {
+  if (i < num_leds - 1) {
     r = i + 1;
   }
   else {
@@ -85,7 +85,7 @@ int funkbox::adjacent_ccw(int i) {
     r = i - 1;
   }
   else {
-    r = NUM_LEDS - 1;
+    r = num_leds - 1;
   }
   return r;
 }
@@ -143,7 +143,7 @@ void funkbox::HSVtoRGB(int hue, int sat, int val, int colors[3]) {
 
 
 void funkbox::copy_led_array(){
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     ledsX[i][0] = leds[i].r;
     ledsX[i][1] = leds[i].g;
     ledsX[i][2] = leds[i].b;
@@ -175,7 +175,7 @@ void funkbox::print_led_arrays(int ilen){
 //------------------------LED EFFECT FUNCTIONS------------------------
 
 void funkbox::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
-  for(int i = 0 ; i < NUM_LEDS; i++ ) {
+  for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, cred, cgrn, cblu);
     LEDS.show();       
     delay(1);
@@ -183,7 +183,7 @@ void funkbox::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO O
 }
 
 void funkbox::one_color_allNOSHOW(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
-  for(int i = 0 ; i < NUM_LEDS; i++ ) {
+  for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, cred, cgrn, cblu);
 
   }  
@@ -214,7 +214,7 @@ void funkbox::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
   ihue = ihue + istep;
   int icolor[3];  
 
-  if (idex >= NUM_LEDS) {
+  if (idex >= num_leds) {
     idex = 0;
   }
   if (ihue >= 359) {
@@ -231,7 +231,7 @@ void funkbox::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
 void funkbox::random_burst(int idelay) { //-RANDOM INDEX/COLOR
   int icolor[3];  
 
-  idex = random(0,NUM_LEDS);
+  idex = random(0,num_leds);
   ihue = random(0,359);
 
   HSVtoRGB(ihue, 255, 255, icolor);
@@ -244,7 +244,7 @@ void funkbox::random_burst(int idelay) { //-RANDOM INDEX/COLOR
 void funkbox::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
   if (bouncedirection == 0) {
     idex = idex + 1;
-    if (idex == NUM_LEDS) {
+    if (idex == num_leds) {
       bouncedirection = 1;
       idex = idex - 1;
     }
@@ -255,7 +255,7 @@ void funkbox::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
       bouncedirection = 0;
     }
   }  
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     if (i == idex) {
       set_color_led(i, 255, 0, 0);
     }
@@ -270,12 +270,12 @@ void funkbox::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
 
 void funkbox::police_lightsONE(int idelay) { //-POLICE LIGHTS (TWO COLOR SINGLE LED)
   idex++;
-  if (idex >= NUM_LEDS) {
+  if (idex >= num_leds) {
     idex = 0;
   }
   int idexR = idex;
   int idexB = antipodal_index(idexR);  
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     if (i == idexR) {
       set_color_led(i, 255, 0, 0);
     }
@@ -293,7 +293,7 @@ void funkbox::police_lightsONE(int idelay) { //-POLICE LIGHTS (TWO COLOR SINGLE 
 
 void funkbox::police_lightsALL(int idelay) { //-POLICE LIGHTS (TWO COLOR SOLID)
   idex++;
-  if (idex >= NUM_LEDS) {
+  if (idex >= num_leds) {
     idex = 0;
   }
   int idexR = idex;
@@ -308,7 +308,7 @@ void funkbox::police_lightsALL(int idelay) { //-POLICE LIGHTS (TWO COLOR SOLID)
 void funkbox::color_bounceFADE(int idelay) { //-BOUNCE COLOR (SIMPLE MULTI-LED FADE)
   if (bouncedirection == 0) {
     idex = idex + 1;
-    if (idex == NUM_LEDS) {
+    if (idex == num_leds) {
       bouncedirection = 1;
       idex = idex - 1;
     }
@@ -326,7 +326,7 @@ void funkbox::color_bounceFADE(int idelay) { //-BOUNCE COLOR (SIMPLE MULTI-LED F
   int iR2 = adjacent_ccw(iR1);
   int iR3 = adjacent_ccw(iR2); 
 
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     if (i == idex) {
       set_color_led(i, 255, 0, 0);
     }
@@ -404,7 +404,7 @@ void funkbox::pulse_one_color_all(int ahue, int idelay) { //-PULSE BRIGHTNESS ON
   int acolor[3];
   HSVtoRGB(ahue, 255, ibright, acolor);
 
-  for(int i = 0 ; i < NUM_LEDS; i++ ) {
+  for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, acolor[0], acolor[1], acolor[2]);
   }
   LEDS.show();    
@@ -430,7 +430,7 @@ void funkbox::pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SATURATIO
   int acolor[3];
   HSVtoRGB(ahue, isat, 255, acolor);
 
-  for(int i = 0 ; i < NUM_LEDS; i++ ) {
+  for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, acolor[0], acolor[1], acolor[2]);
   }
   LEDS.show();
@@ -440,7 +440,7 @@ void funkbox::pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SATURATIO
 
 void funkbox::random_red() { //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMATA STARTED  
   int temprand;
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     for(int c=0; c < 2; c++) {
         temprand = random(0,100);
       if (temprand > 50) {
@@ -460,7 +460,7 @@ void funkbox::rule30(int idelay) { //1D CELLULAR AUTOMATA - RULE 30 (RED FOR NOW
   int iCW;
   int iCCW;
   int y = 100;  
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     iCW = adjacent_cw(i);
     iCCW = adjacent_ccw(i);
     for (int c=0; c < 2; c++) {
@@ -507,7 +507,7 @@ void funkbox::random_march(int idelay) { //RANDOM MARCH CCW
   leds[0].g = acolor[1];
   leds[0].b = acolor[2];
 
-  for(int i = 1; i < NUM_LEDS ; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
+  for(int i = 1; i < num_leds ; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCCW = adjacent_ccw(i);
     leds[i].r = ledsX[iCCW][0];
     leds[i].g = ledsX[iCCW][1];
@@ -546,7 +546,7 @@ void funkbox::rwb_march(int idelay) { //R,W,B MARCH CCW
     break;
   }
 
-  for(int i = 1; i < NUM_LEDS; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
+  for(int i = 1; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCCW = adjacent_ccw(i);
     leds[i].r = ledsX[iCCW][0];
     leds[i].g = ledsX[iCCW][1];
@@ -559,8 +559,8 @@ void funkbox::rwb_march(int idelay) { //R,W,B MARCH CCW
 
 
 void funkbox::white_temps() {
-  int N9 = int(NUM_LEDS/9);
-  for (int i = 0; i < NUM_LEDS; i++ ) {
+  int N9 = int(num_leds/9);
+  for (int i = 0; i < num_leds; i++ ) {
     if (i >= 0 && i < N9) {
       leds[i].r = 255; 
       leds[i].g = 147; 
@@ -601,7 +601,7 @@ void funkbox::white_temps() {
       leds[i].g = 226; 
       leds[i].b = 255;
     } //-OVERCAST SKY - 7000
-    if (i >= N9*8 && i < NUM_LEDS) {
+    if (i >= N9*8 && i < num_leds) {
       leds[i].r = 64; 
       leds[i].g = 156; 
       leds[i].b = 255;
@@ -614,7 +614,7 @@ void funkbox::white_temps() {
 
 void funkbox::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
   idex++;
-  if (idex > NUM_LEDS) {
+  if (idex > num_leds) {
     idex = 0;
   }
 
@@ -625,7 +625,7 @@ void funkbox::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SING
   //int t = constrain((10/di)*10, 10, 500); //-DELAY INCREASE AS INDEX APPROACHES CENTER (WITHIN LIMITS)
   int t = constrain(idelay * di / iperiod, 1, idelay);//-DELAY INCREASE AS INDEX APPROACHES node (WITHIN LIMITS)
 
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     if (i == idex) {
       leds[i].r = acolor[0]; 
       leds[i].g = acolor[1]; 
@@ -646,7 +646,7 @@ void funkbox::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SING
 void funkbox::strip_march_cw(int idelay) { //-MARCH STRIP C-W
   copy_led_array();
   int iCCW;  
-  for(int i = 0; i < NUM_LEDS; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
+  for(int i = 0; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCCW = adjacent_ccw(i);
     leds[i].r = ledsX[iCCW][0];
     leds[i].g = ledsX[iCCW][1];
@@ -660,7 +660,7 @@ void funkbox::strip_march_cw(int idelay) { //-MARCH STRIP C-W
 void funkbox::strip_march_ccw(int idelay) { //-MARCH STRIP C-W 
   copy_led_array();
   int iCW;  
-  for(int i = 0; i < NUM_LEDS; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
+  for(int i = 0; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCW = adjacent_cw(i);
     leds[i].r = ledsX[iCW][0];
     leds[i].g = ledsX[iCW][1];
@@ -671,14 +671,14 @@ void funkbox::strip_march_ccw(int idelay) { //-MARCH STRIP C-W
 }
 
 void funkbox::strip_march_iw() { //-MARCH STRIP inward toward center
-  for(int i = NUM_LEDS/2; i > 0; i-- ) {
+  for(int i = num_leds/2; i > 0; i-- ) {
     leds[i] = leds[i-1];
   }
   leds[0] = 0;
-  for(int i = NUM_LEDS/2+1+EVENODD; i < NUM_LEDS-1; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
+  for(int i = num_leds/2+1+EVENODD; i < num_leds-1; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     leds[i] = leds[i+1];
   }
-  leds[NUM_LEDS-1] = 0;
+  leds[num_leds-1] = 0;
 }
 
 
@@ -686,9 +686,9 @@ void funkbox::pop_random(int ahue, int idelay) {
   int acolor[3];
   HSVtoRGB(ahue, 255, 255, acolor);
 
-  int ix = random(NUM_LEDS);
+  int ix = random(num_leds);
   
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     if (i == ix) {
       leds[i].r = acolor[0]; 
       leds[i].g = acolor[1]; 
@@ -724,12 +724,12 @@ void funkbox::pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO RIGHT 
 	    ix = horizontal_index(idex - TOP_INDEX);
     }
     idex++;
-    if (idex >= NUM_LEDS) {
+    if (idex >= num_leds) {
       idex = 0;
     }      
   }
 
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     if (i == ix) {
       leds[i].r = acolor[0]; 
       leds[i].g = acolor[1]; 
@@ -751,12 +751,12 @@ void funkbox::quad_bright_curve(int ahue, int idelay) {  //-QUADRATIC BRIGHTNESS
   int acolor[3];
   int ax;
 
-  for(int x = 0; x < NUM_LEDS; x++ ) {
+  for(int x = 0; x < num_leds; x++ ) {
     if (x <= TOP_INDEX) {
       ax = x;
     }
     else if (x > TOP_INDEX) {
-      ax = NUM_LEDS-x;
+      ax = num_leds-x;
     }
 
     int a = 1; 
@@ -816,10 +816,10 @@ void funkbox::flame() {
 
 
 void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH- 
-  //int N2 = int(NUM_LEDS/2);
-  int N3 = int(NUM_LEDS/3);
-  int N6 = int(NUM_LEDS/6);  
-  int N12 = int(NUM_LEDS/12);  
+  //int N2 = int(num_leds/2);
+  int N3 = int(num_leds/3);
+  int N6 = int(num_leds/6);
+  int N12 = int(num_leds/12);
   int acolor[3];
 
   for(int i = 0; i < N6; i++ ) { //-HACKY, I KNOW...
@@ -829,9 +829,9 @@ void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH-
     }
     ibright = int(sin(tcount)*255);
 
-    int j0 = (i + NUM_LEDS - N12) % NUM_LEDS;
-    int j1 = (j0+N3) % NUM_LEDS;
-    int j2 = (j1+N3) % NUM_LEDS;    
+    int j0 = (i + num_leds - N12) % num_leds;
+    int j1 = (j0+N3) % num_leds;
+    int j2 = (j1+N3) % num_leds;
     HSVtoRGB(ahue, 255, ibright, acolor);  
     leds[j0].r = acolor[0]; 
     leds[j0].g = acolor[1]; 
@@ -852,7 +852,7 @@ void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH-
 void funkbox::sin_bright_wave(int ahue, int idelay) {  
   int acolor[3];
 
-  for(int i = 0; i < NUM_LEDS; i++ ) {
+  for(int i = 0; i < num_leds; i++ ) {
     tcount = tcount + .1;
     if (tcount > 3.14) {
       tcount = 0.0;
@@ -919,7 +919,7 @@ void funkbox::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' THE LOOP
 
 
 void funkbox::pacman(int idelay) { //-MARCH STRIP C-W
-  int s = int(NUM_LEDS/4);
+  int s = int(num_leds/4);
   lcount++;
   if (lcount > 5) {
     lcount = 0;
@@ -982,24 +982,24 @@ void funkbox::beat_march(int iwidth) {
 	}
 
 	if (low_beat) {
-		leds[NUM_LEDS-1].r = 255;
+		leds[num_leds-1].r = 255;
 		low_beat--;
 	} else {
-		leds[NUM_LEDS-1].r = 0;
+		leds[num_leds-1].r = 0;
 	}
 
 	if (mid_beat) {
-		leds[NUM_LEDS-1].g = 255;
+		leds[num_leds-1].g = 255;
 		mid_beat--;
 	} else {
-		leds[NUM_LEDS-1].g = 0;
+		leds[num_leds-1].g = 0;
 	}
 
 	if (high_beat) {
-		leds[NUM_LEDS-1].b = 255;
+		leds[num_leds-1].b = 255;
 		high_beat--;
 	} else {
-		leds[NUM_LEDS-1].b = 0;
+		leds[num_leds-1].b = 0;
 	}
 	strip_march_cw(0);
 	*/

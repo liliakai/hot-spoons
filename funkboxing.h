@@ -6,14 +6,14 @@ public:
   int BOTTOM_INDEX;
   int TOP_INDEX;
   int EVENODD;
-  int NUM_LEDS;
+  int num_leds;
 
   struct CRGB* leds;
   int** ledsX;
 
   int ledMode;
 
-  int idex;             //-LED INDEX (0 to NUM_LEDS-1
+  int idex;             //-LED INDEX (0 to num_leds-1
   int ihue;             //-HUE (0-360)
   int ibright;          //-BRIGHTNESS (0-255)
   int isat;             //-SATURATION (0-255)
