@@ -18,6 +18,8 @@ public:
   int ibright;          //-BRIGHTNESS (0-255)
   int isat;             //-SATURATION (0-255)
   int bouncedirection;  //-SWITCH FOR COLOR BOUNCE (0-1)
+  int lcount;
+  float tcount;
 
   funkbox(int n);
   void loop();
