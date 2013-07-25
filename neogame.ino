@@ -42,10 +42,10 @@ void game_setup() {
 }
 
 void setup() {
-  Serial.begin(115200);      // SETUP HARDWARE SERIAL (USB)
+  Serial.begin(115200);
 
   sCmd.addCommand("m",   set_mode_strip);
-  sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+  sCmd.setDefaultHandler(unrecognized);
 
   fb.setup();
 
@@ -70,6 +70,7 @@ void game_step() {
     fb.leds[i] = fb.leds[i-1];
   }
   fb.set_color_led(0, 0, 0, 0);
+
   for (int i=puck+PUCK_PADDING+1; i < NUM_LEDS-1; i++) {
     fb.leds[i] = fb.leds[i+1];
   }
@@ -81,6 +82,7 @@ void game_step() {
 
     puck++;
   }
+
   if (fb.leds[puck+PUCK_PADDING+1] != CRGB(0)) {
     fb.set_color_led(puck+PUCK_PADDING+1, 0, 0, 0);
     if (b2fired) b2fired--;
@@ -92,6 +94,7 @@ void game_step() {
       flash(color2, 10, 100);
     setup();
   }
+
   if (puck == NUM_LEDS-1) {
     if (mode != SPECTRUM_MODE)
       flash(color1, 10, 100);
@@ -127,15 +130,15 @@ void handleButtons_freeplay() {
   boolean b1 = button1.read();
   boolean b2 = button3.read();
 
-  if (b1 == 0) {  
+  if (b1 == 0) {
     b1fire();
-  }  
+  }
 
   if (b2 == 0) {
     b2fire();
   }
 
-} 
+}
 
 
 void handleButtons_timing() {
