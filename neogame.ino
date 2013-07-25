@@ -180,15 +180,14 @@ void handleSpectrum () {
 
 void handleButtons_freeplay() {
   boolean b1 = button1.read();
-  boolean b2 = button2.read();
+  boolean b2 = button3.read();
+
   if (b1 == 0) {  
-    Serial.println("pew!");
-    fb.leds[0] = color1;
+    b1fire();
   }  
 
   if (b2 == 0) {
-    Serial.println("bew!");
-    fb.leds[NUM_LEDS-1] = color2;
+    b2fire();
   }
 
 } 
