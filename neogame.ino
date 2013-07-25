@@ -3,8 +3,6 @@
 #include <SerialCommand.h>
 #include "funkboxing.h"
 #include "button.h"
-#include "noise.h"
-#include "spectrum.h"
 #include "game.h"
 
 #define SERIALCOMMAND_DEBUG 1
@@ -36,7 +34,6 @@ void setup() {
 }
 
 void game_loop() {
-  makeNoise();
   g.step();
 }
 

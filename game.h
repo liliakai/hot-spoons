@@ -1,3 +1,5 @@
+#include "spectrum.h"
+#include "noise.h"
 #define FREEPLAY_MODE 0
 #define SPECTRUM_MODE 1
 #define TIMING_MODE 2
@@ -36,6 +38,7 @@ public:
   }
 
   void step() {
+    makeNoise();
     CRGB puck_color = CRGB(0,0,255);
     if (lockout) {
       puck_color = CRGB(128,128,128);
