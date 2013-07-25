@@ -167,27 +167,16 @@ void game_step() {
 
 void flash(uint32_t c, int times, int d) {
   for (int j=0; j < times; j++) {
-    for(uint16_t i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, c);
-    }
-    strip.show();
+    fb.one_color_allNOSHOW(CRGB(c));
+    LEDS.show();
     delay(d);
+
     fb.one_color_allNOSHOW(0,0,0);
     LEDS.show();
     delay(d);
-    strip.show();
-    delay(d);
-
   }
 }
 
-boolean debounce(int button, int* prev) {
-  int newval = digitalRead(button);
-  int oldval = *prev;
-  *prev = newval;
-
-  return (newval == 0) && (newval != oldval);
-} // debounce(
 
 
 void handleSpectrum () {
