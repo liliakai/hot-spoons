@@ -43,6 +43,7 @@ public:
   void police_lightsALL(int idelay) ; //-POLICE LIGHTS (TWO COLOR SOLID)
   void color_bounceFADE(int idelay) ; //-BOUNCE COLOR (SIMPLE MULTI-LED FADE)
   void flicker(int thishue, int thissat) ;
+  void flash(CRGB color, int times, int d);
   void pulse_one_color_all(int ahue, int idelay) ; //-PULSE BRIGHTNESS ON ALL LEDS TO ONE COLOR 
   void pulse_one_color_all_rev(int ahue, int idelay) ; //-PULSE SATURATION ON ALL LEDS TO ONE COLOR 
   void random_red() ; //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMATA STARTED  

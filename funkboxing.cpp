@@ -390,6 +390,17 @@ void funkbox::flicker(int thishue, int thissat) {
   }
 }
 
+void funkbox::flash(CRGB color, int times, int d) {
+  for (int j=0; j < times; j++) {
+    one_color_allNOSHOW(color.r, color.g, color.b);
+    LEDS.show();
+    delay(d);
+
+    one_color_allNOSHOW(0,0,0);
+    LEDS.show();
+    delay(d);
+  }
+}
 
 void funkbox::pulse_one_color_all(int ahue, int idelay) { //-PULSE BRIGHTNESS ON ALL LEDS TO ONE COLOR 
 
