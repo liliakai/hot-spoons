@@ -1,18 +1,29 @@
-Two player, single-button game played on an LED strand.
+Games and lighting effects for a WS2811 LED strand.
 
-V1.0
+This program includes 3 game variants and an array of lighting effects.
+Game modes are two-player and require one button per player for interaction.
+Lightshow mode uses the same two buttons to navigate between different effects.
+A third button is used to cycle between the game variants and a lightshow mode.
+Details on each mode are given below.
+
+*FREEPLAY MODE*
 Each player uses their button to launch colored projectiles from opposite ends
-of the strand toward a white "puck" in the center, moving it toward the
-opposing side. Each shot will lock out all other shots for a brief moment,
-allowing you to block enemy shots if you can predict when they will be fired
-and shoot just before. 
+of the strand toward a "puck" in the center, moving it toward the
+opposing side. The game resets when the puck reaches one end of the strand.
+If using audio output, sounds are generated when you score.
 
-V2.0 
-Each player uses their button to launch colored projectiles from their 
-end to push the white puck toward their opponent. If they launch 
-immediately before their opponent, they score a point or two or three.
-If they launch and their opponent does NOT launch, their shot bounces 
-off their opponent's shield and scores a point for their opponent!
+*TIMING MODE*
+Same as freeplay mode but players may only shoot when the puck turns white,
+which happens randomly. Shooting when the puck is not white will be penalized
+by moving the puck toward you a small distance.
 
-V2.1
-Add pew() and bew() which are routines to make noises when scores.
+*SPECTRUM MODE*
+(requires additional hardware)
+Same as freeplay mode but shots are also fired by audio-based triggers read
+from the analog input pins.
+
+*LIGHTSHOW MODE*
+Demonstrates a variety of lighting effects. Use buttons or serial commands to
+change effects. Serial commands should look like "m 5", where 5 is the mode number.
+If using Arduino's serial monitor, be sure to choose "Newline" in the line-ending
+dropdown seletor box.
