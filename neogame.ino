@@ -186,7 +186,7 @@ void handleSpectrum () {
   boolean b2 = button3.pressed() || spectrum(HIGH_SPECTRUM);
 
   if (b1) {
-   b1fire();
+    b1fire();
   }
   if (b2) {
     b2fire();
@@ -238,19 +238,19 @@ void handleButtons_timing() {
 void b1fire() {
   Serial.println("pew!");
   whichTune = PEW;  // make the PEW noise!
-        for (int i=0; i < SHOT; i++) {
-          fb.leds[i] = color1; // b1 fires a shot from 0!
-        }
-        b1fired+=SHOT;  // lock everything out until it's gone
+  for (int i=0; i < SHOT; i++) {
+    fb.leds[i] = color1; // b1 fires a shot from 0!
+  }
+  b1fired+=SHOT;  // lock everything out until it's gone
 }
 
 void b2fire() {
   Serial.println("bew!");
   whichTune = BEW;  // make the BEW noise!
-        for (int i=0; i < SHOT; i++) {
-          fb.leds[NUM_LEDS-1-i] = color2; // b2 fires a shot from n-1!
-        }
-        b2fired+=SHOT;  // lock everything out until it's gone
+  for (int i=0; i < SHOT; i++) {
+    fb.leds[NUM_LEDS-1-i] = color2; // b2 fires a shot from n-1!
+  }
+  b2fired+=SHOT;  // lock everything out until it's gone
 }
 
 void game_loop() {
@@ -274,11 +274,11 @@ void game_loop() {
   LEDS.show();
 }
 
-void loop() { 
+void loop() {
   if (button2.pressed()) {
     mode = (mode + 1) % 4;
     setup();
-  } 
+  }
 
   if (mode == FB_MODE) {
     fb_loop();

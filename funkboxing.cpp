@@ -1014,12 +1014,11 @@ void funkbox::beat_march(int iwidth) {
 }
 
 //------------------SETUP------------------
-void funkbox::setup()  
+void funkbox::setup()
 {
   one_color_allNOSHOW(0,0,0); //-BLANK STRIP
-  LEDS.show();  
+  LEDS.show();
 }
-
 
 void funkbox::demo_mode(){
   int r = 10;
