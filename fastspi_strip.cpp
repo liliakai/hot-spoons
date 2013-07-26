@@ -904,7 +904,7 @@ void fastspi_strip::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' TH
   if (ihue > 359) {
     ihue = 0;
   }
-  Serial.println(ihue);  
+  //Serial.println(ihue);
   int idexA = idex;
   int idexB = horizontal_index(idexA);
 
