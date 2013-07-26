@@ -1,6 +1,6 @@
 #include <FastSPI_LED2.h>
 
-class funkbox {
+class fastspi_strip {
 public:
 
   int BOTTOM_INDEX;
@@ -21,7 +21,7 @@ public:
   int lcount;
   float tcount;
 
-  funkbox(int n);
+  fastspi_strip(int n);
   void loop();
   void setup();
   void set_color_led(int adex, int cred, int cgrn, int cblu);

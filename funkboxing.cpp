@@ -17,7 +17,7 @@
 #define DEFAULT_LED_MODE 5
 #define DATA_PIN 13
 
-funkbox::funkbox(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
+fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
 	ledMode(DEFAULT_LED_MODE)
 {
 	leds = new CRGB[num_leds];
@@ -31,7 +31,7 @@ funkbox::funkbox(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(
 }
 
 //-SET THE COLOR OF A SINGLE RGB LED
-void funkbox::set_color_led(int idex, int cred, int cgrn, int cblu) {
+void fastspi_strip::set_color_led(int idex, int cred, int cgrn, int cblu) {
 
   leds[idex].r = cred;
   leds[idex].g = cgrn;
@@ -40,7 +40,7 @@ void funkbox::set_color_led(int idex, int cred, int cgrn, int cblu) {
 
 
 //-FIND INDEX OF HORIZONAL OPPOSITE LED
-int funkbox::horizontal_index(int i) {
+int fastspi_strip::horizontal_index(int i) {
   //-ONLY WORKS WITH INDEX < TOPINDEX
   if (i == BOTTOM_INDEX) {
     return BOTTOM_INDEX;
@@ -55,7 +55,7 @@ int funkbox::horizontal_index(int i) {
 }
 
 //-FIND INDEX OF ANTIPODAL OPPOSITE LED
-int funkbox::antipodal_index(int i) {
+int fastspi_strip::antipodal_index(int i) {
   //int N2 = int(num_leds/2);
   int iN = i + TOP_INDEX;
   if (i >= TOP_INDEX) {
@@ -66,7 +66,7 @@ int funkbox::antipodal_index(int i) {
 
 
 //-FIND ADJACENT INDEX CLOCKWISE
-int funkbox::adjacent_cw(int i) {
+int fastspi_strip::adjacent_cw(int i) {
   int r;
   if (i < num_leds - 1) {
     r = i + 1;
@@ -79,7 +79,7 @@ int funkbox::adjacent_cw(int i) {
 
 
 //-FIND ADJACENT INDEX COUNTER-CLOCKWISE
-int funkbox::adjacent_ccw(int i) {
+int fastspi_strip::adjacent_ccw(int i) {
   int r;
   if (i > 0) {
     r = i - 1;
@@ -92,7 +92,7 @@ int funkbox::adjacent_ccw(int i) {
 
 
 //-CONVERT HSV VALUE TO RGB
-void funkbox::HSVtoRGB(int hue, int sat, int val, int colors[3]) {
+void fastspi_strip::HSVtoRGB(int hue, int sat, int val, int colors[3]) {
   // hue: 0-359, sat: 0-255, val (lightness): 0-255
   int r, g, b, base;
 
@@ -142,7 +142,7 @@ void funkbox::HSVtoRGB(int hue, int sat, int val, int colors[3]) {
 }
 
 
-void funkbox::copy_led_array(){
+void fastspi_strip::copy_led_array(){
   for(int i = 0; i < num_leds; i++ ) {
     ledsX[i][0] = leds[i].r;
     ledsX[i][1] = leds[i].g;
@@ -151,7 +151,7 @@ void funkbox::copy_led_array(){
 }
 
 
-void funkbox::print_led_arrays(int ilen){
+void fastspi_strip::print_led_arrays(int ilen){
   copy_led_array();
   Serial.println("~~~***ARRAYS|idx|led-r-g-b|ledX-0-1-2");
   for(int i = 0; i < ilen; i++ ) {
@@ -174,7 +174,7 @@ void funkbox::print_led_arrays(int ilen){
 
 //------------------------LED EFFECT FUNCTIONS------------------------
 
-void funkbox::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
+void fastspi_strip::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
   for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, cred, cgrn, cblu);
     LEDS.show();       
@@ -182,21 +182,21 @@ void funkbox::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO O
   }  
 }
 
-void funkbox::one_color_allNOSHOW(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
+void fastspi_strip::one_color_allNOSHOW(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
   for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, cred, cgrn, cblu);
 
   }  
 }
 
-void funkbox::rainbow_strobe(int idelay) {
+void fastspi_strip::rainbow_strobe(int idelay) {
   rainbow_fade(idelay);
   one_color_allNOSHOW(0, 0, 0);
   LEDS.show();
   delay(idelay);
 }
 
-void funkbox::rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
+void fastspi_strip::rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
   ihue++;
   if (ihue >= 359) {
     ihue = 0;
@@ -209,7 +209,7 @@ void funkbox::rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
 }
 
 
-void funkbox::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
+void fastspi_strip::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
   idex++;
   ihue = ihue + istep;
   int icolor[3];  
@@ -228,7 +228,7 @@ void funkbox::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
 }
 
 
-void funkbox::random_burst(int idelay) { //-RANDOM INDEX/COLOR
+void fastspi_strip::random_burst(int idelay) { //-RANDOM INDEX/COLOR
   int icolor[3];  
 
   idex = random(0,num_leds);
@@ -241,7 +241,7 @@ void funkbox::random_burst(int idelay) { //-RANDOM INDEX/COLOR
 }
 
 
-void funkbox::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
+void fastspi_strip::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
   if (bouncedirection == 0) {
     idex = idex + 1;
     if (idex == num_leds) {
@@ -268,7 +268,7 @@ void funkbox::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
 }
 
 
-void funkbox::police_lightsONE(int idelay) { //-POLICE LIGHTS (TWO COLOR SINGLE LED)
+void fastspi_strip::police_lightsONE(int idelay) { //-POLICE LIGHTS (TWO COLOR SINGLE LED)
   idex++;
   if (idex >= num_leds) {
     idex = 0;
@@ -291,7 +291,7 @@ void funkbox::police_lightsONE(int idelay) { //-POLICE LIGHTS (TWO COLOR SINGLE 
 }
 
 
-void funkbox::police_lightsALL(int idelay) { //-POLICE LIGHTS (TWO COLOR SOLID)
+void fastspi_strip::police_lightsALL(int idelay) { //-POLICE LIGHTS (TWO COLOR SOLID)
   idex++;
   if (idex >= num_leds) {
     idex = 0;
@@ -305,7 +305,7 @@ void funkbox::police_lightsALL(int idelay) { //-POLICE LIGHTS (TWO COLOR SOLID)
 }
 
 
-void funkbox::color_bounceFADE(int idelay) { //-BOUNCE COLOR (SIMPLE MULTI-LED FADE)
+void fastspi_strip::color_bounceFADE(int idelay) { //-BOUNCE COLOR (SIMPLE MULTI-LED FADE)
   if (bouncedirection == 0) {
     idex = idex + 1;
     if (idex == num_leds) {
@@ -358,7 +358,7 @@ void funkbox::color_bounceFADE(int idelay) { //-BOUNCE COLOR (SIMPLE MULTI-LED F
 }
 
 
-void funkbox::flicker(int thishue, int thissat) {
+void fastspi_strip::flicker(int thishue, int thissat) {
   int random_bright = random(0,255);
   int random_delay = random(10,100);
   int random_bool = random(0,random_bright);
@@ -374,7 +374,7 @@ void funkbox::flicker(int thishue, int thissat) {
   }
 }
 
-void funkbox::flash(CRGB color, int times, int d) {
+void fastspi_strip::flash(CRGB color, int times, int d) {
   for (int j=0; j < times; j++) {
     one_color_allNOSHOW(color.r, color.g, color.b);
     LEDS.show();
@@ -386,7 +386,7 @@ void funkbox::flash(CRGB color, int times, int d) {
   }
 }
 
-void funkbox::pulse_one_color_all(int ahue, int idelay) { //-PULSE BRIGHTNESS ON ALL LEDS TO ONE COLOR 
+void fastspi_strip::pulse_one_color_all(int ahue, int idelay) { //-PULSE BRIGHTNESS ON ALL LEDS TO ONE COLOR
 
   if (bouncedirection == 0) {
     ibright++;
@@ -412,7 +412,7 @@ void funkbox::pulse_one_color_all(int ahue, int idelay) { //-PULSE BRIGHTNESS ON
 }
 
 
-void funkbox::pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SATURATION ON ALL LEDS TO ONE COLOR 
+void fastspi_strip::pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SATURATION ON ALL LEDS TO ONE COLOR
 
   if (bouncedirection == 0) {
     isat++;
@@ -438,7 +438,7 @@ void funkbox::pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SATURATIO
 }
 
 
-void funkbox::random_red() { //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMATA STARTED  
+void fastspi_strip::random_red() { //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMATA STARTED
   int temprand;
   for(int i = 0; i < num_leds; i++ ) {
     for(int c=0; c < 2; c++) {
@@ -455,7 +455,7 @@ void funkbox::random_red() { //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMATA STA
 }
 
 
-void funkbox::rule30(int idelay) { //1D CELLULAR AUTOMATA - RULE 30 (RED FOR NOW)
+void fastspi_strip::rule30(int idelay) { //1D CELLULAR AUTOMATA - RULE 30 (RED FOR NOW)
   copy_led_array();
   int iCW;
   int iCCW;
@@ -496,7 +496,7 @@ void funkbox::rule30(int idelay) { //1D CELLULAR AUTOMATA - RULE 30 (RED FOR NOW
 }
 
 
-void funkbox::random_march(int idelay) { //RANDOM MARCH CCW
+void fastspi_strip::random_march(int idelay) { //RANDOM MARCH CCW
   copy_led_array();
   int iCCW;
 
@@ -519,7 +519,7 @@ void funkbox::random_march(int idelay) { //RANDOM MARCH CCW
 }
 
 
-void funkbox::rwb_march(int idelay) { //R,W,B MARCH CCW
+void fastspi_strip::rwb_march(int idelay) { //R,W,B MARCH CCW
   copy_led_array();
   int iCCW;
 
@@ -558,7 +558,7 @@ void funkbox::rwb_march(int idelay) { //R,W,B MARCH CCW
 }
 
 
-void funkbox::white_temps() {
+void fastspi_strip::white_temps() {
   int N9 = int(num_leds/9);
   for (int i = 0; i < num_leds; i++ ) {
     if (i >= 0 && i < N9) {
@@ -612,7 +612,7 @@ void funkbox::white_temps() {
 }
 
 
-void funkbox::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
+void fastspi_strip::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
   idex++;
   if (idex > num_leds) {
     idex = 0;
@@ -643,7 +643,7 @@ void funkbox::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP (SING
 }
 
 
-void funkbox::strip_march_cw(int idelay) { //-MARCH STRIP C-W
+void fastspi_strip::strip_march_cw(int idelay) { //-MARCH STRIP C-W
   copy_led_array();
   int iCCW;  
   for(int i = 0; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
@@ -657,7 +657,7 @@ void funkbox::strip_march_cw(int idelay) { //-MARCH STRIP C-W
 }
 
 
-void funkbox::strip_march_ccw(int idelay) { //-MARCH STRIP C-W 
+void fastspi_strip::strip_march_ccw(int idelay) { //-MARCH STRIP C-W
   copy_led_array();
   int iCW;  
   for(int i = 0; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
@@ -670,7 +670,7 @@ void funkbox::strip_march_ccw(int idelay) { //-MARCH STRIP C-W
   delay(idelay);
 }
 
-void funkbox::strip_march_iw() { //-MARCH STRIP inward toward center
+void fastspi_strip::strip_march_iw() { //-MARCH STRIP inward toward center
   for(int i = num_leds/2; i > 0; i-- ) {
     leds[i] = leds[i-1];
   }
@@ -682,7 +682,7 @@ void funkbox::strip_march_iw() { //-MARCH STRIP inward toward center
 }
 
 
-void funkbox::pop_random(int ahue, int idelay) {
+void fastspi_strip::pop_random(int ahue, int idelay) {
   int acolor[3];
   HSVtoRGB(ahue, 255, 255, acolor);
 
@@ -705,7 +705,7 @@ void funkbox::pop_random(int ahue, int idelay) {
   delay(idelay);    
 
 }
-void funkbox::pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO RIGHT UP THE RING
+void fastspi_strip::pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO RIGHT UP THE RING
   int acolor[3];
   HSVtoRGB(ahue, 255, 255, acolor);
 
@@ -747,7 +747,7 @@ void funkbox::pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO RIGHT 
 }
 
 
-void funkbox::quad_bright_curve(int ahue, int idelay) {  //-QUADRATIC BRIGHTNESS CURVER
+void fastspi_strip::quad_bright_curve(int ahue, int idelay) {  //-QUADRATIC BRIGHTNESS CURVER
   int acolor[3];
   int ax;
 
@@ -780,7 +780,7 @@ void funkbox::quad_bright_curve(int ahue, int idelay) {  //-QUADRATIC BRIGHTNESS
 }
 
 
-void funkbox::flame() {
+void fastspi_strip::flame() {
   int acolor[3];
   int idelay = random(0,35);
 
@@ -815,7 +815,7 @@ void funkbox::flame() {
 }
 
 
-void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH- 
+void fastspi_strip::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH-
   //int N2 = int(num_leds/2);
   int N3 = int(num_leds/3);
   int N6 = int(num_leds/6);
@@ -849,7 +849,7 @@ void funkbox::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBOLISH-
 }
 
 
-void funkbox::sin_bright_wave(int ahue, int idelay) {  
+void fastspi_strip::sin_bright_wave(int ahue, int idelay) {
   int acolor[3];
 
   for(int i = 0; i < num_leds; i++ ) {
@@ -871,7 +871,7 @@ void funkbox::sin_bright_wave(int ahue, int idelay) {
 }
 
 
-void funkbox::fade_vertical(int ahue, int idelay) { //-FADE 'UP' THE LOOP
+void fastspi_strip::fade_vertical(int ahue, int idelay) { //-FADE 'UP' THE LOOP
   idex++;
   if (idex > TOP_INDEX) {
     idex = 0;
@@ -894,7 +894,7 @@ void funkbox::fade_vertical(int ahue, int idelay) { //-FADE 'UP' THE LOOP
 }
 
 
-void funkbox::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' THE LOOP
+void fastspi_strip::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' THE LOOP
   idex++;
   if (idex > TOP_INDEX) {
     idex = 0;
@@ -918,7 +918,7 @@ void funkbox::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' THE LOOP
 }
 
 
-void funkbox::pacman(int idelay) { //-MARCH STRIP C-W
+void fastspi_strip::pacman(int idelay) { //-MARCH STRIP C-W
   int s = int(num_leds/4);
   lcount++;
   if (lcount > 5) {
@@ -969,7 +969,7 @@ void funkbox::pacman(int idelay) { //-MARCH STRIP C-W
 }
 
 //int low_beat, mid_beat, high_beat;
-void funkbox::beat_march(int iwidth) {
+void fastspi_strip::beat_march(int iwidth) {
 	/* todo
 	if ( !low_beat && spectrum(LOW_SPECTRUM) ) {
 		low_beat = iwidth;
@@ -1006,13 +1006,13 @@ void funkbox::beat_march(int iwidth) {
 }
 
 //------------------SETUP------------------
-void funkbox::setup()
+void fastspi_strip::setup()
 {
   one_color_allNOSHOW(0,0,0); //-BLANK STRIP
   LEDS.show();
 }
 
-void funkbox::demo_mode(){
+void fastspi_strip::demo_mode(){
   int r = 10;
   /*
   for(int i=0; i<r; i++) {
@@ -1162,7 +1162,7 @@ void funkbox::demo_mode(){
 
 
 //------------------MAIN LOOP------------------
-void funkbox::loop() {
+void fastspi_strip::loop() {
 
   if (ledMode == 0) { one_color_all(0,0,0); }            //---STRIP OFF - "0"
   if (ledMode == 1) { one_color_all(255,255,255); }      //---STRIP SOLID WHITE
@@ -1208,7 +1208,7 @@ void funkbox::loop() {
 
 }
 
-void funkbox::set_mode(int newMode) {
+void fastspi_strip::set_mode(int newMode) {
   ledMode = newMode;
   if (ledMode == 13) {  //-FOR CELL AUTO
     random_red();

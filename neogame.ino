@@ -6,7 +6,7 @@
 #include "game.h"
 
 #define SERIALCOMMAND_DEBUG 1
-#define FB_MODE 3
+#define LIGHTSHOW_MODE 3
 
 #define NUM_LEDS 240
 int mode = SPECTRUM_MODE;
@@ -14,8 +14,8 @@ int mode = SPECTRUM_MODE;
 Button button1 = Button(A6);
 Button button2 = Button(A7);
 Button button3 = Button(A8);
-funkbox fb = funkbox(NUM_LEDS);
-game g = game(NUM_LEDS, fb, button1, button3);
+fastspi_strip strip = fastspi_strip(NUM_LEDS);
+game g = game(NUM_LEDS, strip, button1, button3);
 SerialCommand sCmd;
 
 void setup() {
@@ -24,9 +24,9 @@ void setup() {
   sCmd.addCommand("m",   set_mode_strip);
   sCmd.setDefaultHandler(unrecognized);
 
-  fb.setup();
+  strip.setup();
 
-  if (mode != FB_MODE) {
+  if (mode != LIGHTSHOW_MODE) {
     g.setup(mode);
   }
 
@@ -39,8 +39,8 @@ void loop() {
     setup();
   }
 
-  if (mode == FB_MODE) {
-    fb_loop();
+  if (mode == LIGHTSHOW_MODE) {
+    lightshow_loop();
   }
   else {
     g.loop();
@@ -52,30 +52,30 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
   arg = sCmd.next();
 
   if (arg != NULL) {
-	  fb.set_mode(atoi(arg));
+    strip.set_mode(atoi(arg));
   }
   Serial.print("~~~***NEW MODE-");
-  Serial.println(fb.ledMode);
+  Serial.println(strip.ledMode);
 }
 
 //------------------MAIN LOOP------------------
-void fb_loop() {
+void lightshow_loop() {
   if(button1.pressed()) {
-    set_fb_mode((fb.ledMode-1) % 28);
+    set_lightshow_mode((strip.ledMode-1) % 28);
   }
   if(button3.pressed()) {
-    set_fb_mode((fb.ledMode+1) % 28);
+    set_lightshow_mode((strip.ledMode+1) % 28);
   }
 
   sCmd.readSerial();     //-PROCESS SERIAL COMMANDS
 
-  fb.loop();
+  strip.loop();
 }
 
-void set_fb_mode(int mode) {
-  fb.set_mode(mode);
+void set_lightshow_mode(int mode) {
+  strip.set_mode(mode);
   Serial.print("~~~***NEW MODE-");
-  Serial.println(fb.ledMode);
+  Serial.println(strip.ledMode);
 }
 
 

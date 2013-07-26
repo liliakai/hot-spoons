@@ -21,11 +21,11 @@ public:
   int lockout;
   int b1fired;
   int b2fired;
-  funkbox& fb;
+  fastspi_strip& strip;
   Button& button1, button2;
 
-  game(int n, funkbox& fbref, Button& b1, Button& b2)
-    : num_leds(n), fb(fbref), button1(b1), button2(b2) {
+  game(int n, fastspi_strip& fbref, Button& b1, Button& b2)
+    : num_leds(n), strip(fbref), button1(b1), button2(b2) {
     setup();
   }
 
@@ -45,41 +45,41 @@ public:
     }
 
     for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
-      fb.leds[i] = puck_color;
+      strip.leds[i] = puck_color;
     }
 
     for (int i=puck-PUCK_PADDING-1; i > 0; i--) {
-      fb.leds[i] = fb.leds[i-1];
+      strip.leds[i] = strip.leds[i-1];
     }
-    fb.set_color_led(0, 0, 0, 0);
+    strip.set_color_led(0, 0, 0, 0);
 
     for (int i=puck+PUCK_PADDING+1; i < num_leds-1; i++) {
-      fb.leds[i] = fb.leds[i+1];
+      strip.leds[i] = strip.leds[i+1];
     }
-    fb.set_color_led(num_leds-1, 0, 0, 0);
+    strip.set_color_led(num_leds-1, 0, 0, 0);
 
-    if (fb.leds[puck-PUCK_PADDING-1] != CRGB(0)) {
-      fb.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
+    if (strip.leds[puck-PUCK_PADDING-1] != CRGB(0)) {
+      strip.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
       if (b1fired) b1fired--;
 
       puck++;
     }
 
-    if (fb.leds[puck+PUCK_PADDING+1] != CRGB(0)) {
-      fb.set_color_led(puck+PUCK_PADDING+1, 0, 0, 0);
+    if (strip.leds[puck+PUCK_PADDING+1] != CRGB(0)) {
+      strip.set_color_led(puck+PUCK_PADDING+1, 0, 0, 0);
       if (b2fired) b2fired--;
       puck--;
     }
 
     if (puck == 0) {
       if (mode != SPECTRUM_MODE)
-        fb.flash(color2, 10, 100);
+        strip.flash(color2, 10, 100);
       setup();
     }
 
     if (puck == num_leds-1) {
       if (mode != SPECTRUM_MODE)
-        fb.flash(color1, 10, 100);
+        strip.flash(color1, 10, 100);
       setup();
     }
 
@@ -157,7 +157,7 @@ public:
     Serial.println("pew!");
     whichTune = PEW;  // make the PEW noise!
     for (int i=0; i < SHOT; i++) {
-      fb.leds[i] = color1; // b1 fires a shot from 0!
+      strip.leds[i] = color1; // b1 fires a shot from 0!
     }
     b1fired+=SHOT;  // lock everything out until it's gone
   }
@@ -166,7 +166,7 @@ public:
     Serial.println("bew!");
     whichTune = BEW;  // make the BEW noise!
     for (int i=0; i < SHOT; i++) {
-      fb.leds[num_leds-1-i] = color2; // b2 fires a shot from n-1!
+      strip.leds[num_leds-1-i] = color2; // b2 fires a shot from n-1!
     }
     b2fired+=SHOT;  // lock everything out until it's gone
   }
