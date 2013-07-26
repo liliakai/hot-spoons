@@ -12,7 +12,7 @@
 // Uncomment this line if you want to talk to DMX controllers
 // #define FASTSPI_USE_DMX_SIMPLE 1
 
-#include "funkboxing.h"
+#include "fastspi_strip.h"
 
 #define DEFAULT_LED_MODE 5
 #define DATA_PIN 13

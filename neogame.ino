@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <FastSPI_LED2.h>
 #include <SerialCommand.h>
-#include "funkboxing.h"
+#include "fastspi_strip.h"
 #include "button.h"
 #include "game.h"
 
