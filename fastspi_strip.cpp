@@ -19,16 +19,16 @@
 #define MAX_MODE 28 // last mode to hit when cycling through next/prev
 
 fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
-	ledMode(DEFAULT_LED_MODE)
+  ledMode(DEFAULT_LED_MODE)
 {
-	leds = new CRGB[num_leds];
-	ledsX = new int*[num_leds];
-	for (int i=0; i < num_leds; ++i) {
-		ledsX[i] = new int[3];
-	}
+  leds = new CRGB[num_leds];
+  ledsX = new int*[num_leds];
+  for (int i=0; i < num_leds; ++i) {
+    ledsX[i] = new int[3];
+  }
 
-	LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, num_leds);
-	LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
+  LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, num_leds);
+  LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
 }
 
 //-SET THE COLOR OF A SINGLE RGB LED
@@ -719,10 +719,10 @@ void fastspi_strip::pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO 
   else if (bouncedirection == 1) {
     bouncedirection = 0;
     if (idex > TOP_INDEX) {
-	    ix = horizontal_index(idex);
+      ix = horizontal_index(idex);
     }
     else {
-	    ix = horizontal_index(idex - TOP_INDEX);
+      ix = horizontal_index(idex - TOP_INDEX);
     }
     idex++;
     if (idex >= num_leds) {
@@ -971,39 +971,39 @@ void fastspi_strip::pacman(int idelay) { //-MARCH STRIP C-W
 
 //int low_beat, mid_beat, high_beat;
 void fastspi_strip::beat_march(int iwidth) {
-	/* todo
-	if ( !low_beat && spectrum(LOW_SPECTRUM) ) {
-		low_beat = iwidth;
-	}
-	if (!mid_beat && spectrum(MID_SPECTRUM)) {
-		mid_beat = iwidth;
-	}
-	if (!high_beat && spectrum(HIGH_SPECTRUM)) {
-		high_beat = iwidth;
-	}
+  /* todo
+  if ( !low_beat && spectrum(LOW_SPECTRUM) ) {
+    low_beat = iwidth;
+  }
+  if (!mid_beat && spectrum(MID_SPECTRUM)) {
+    mid_beat = iwidth;
+  }
+  if (!high_beat && spectrum(HIGH_SPECTRUM)) {
+    high_beat = iwidth;
+  }
 
-	if (low_beat) {
-		leds[num_leds-1].r = 255;
-		low_beat--;
-	} else {
-		leds[num_leds-1].r = 0;
-	}
+  if (low_beat) {
+    leds[num_leds-1].r = 255;
+    low_beat--;
+  } else {
+    leds[num_leds-1].r = 0;
+  }
 
-	if (mid_beat) {
-		leds[num_leds-1].g = 255;
-		mid_beat--;
-	} else {
-		leds[num_leds-1].g = 0;
-	}
+  if (mid_beat) {
+    leds[num_leds-1].g = 255;
+    mid_beat--;
+  } else {
+    leds[num_leds-1].g = 0;
+  }
 
-	if (high_beat) {
-		leds[num_leds-1].b = 255;
-		high_beat--;
-	} else {
-		leds[num_leds-1].b = 0;
-	}
-	strip_march_cw(0);
-	*/
+  if (high_beat) {
+    leds[num_leds-1].b = 255;
+    high_beat--;
+  } else {
+    leds[num_leds-1].b = 0;
+  }
+  strip_march_cw(0);
+  */
 }
 
 //------------------SETUP------------------
