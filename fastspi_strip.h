@@ -42,9 +42,6 @@ public:
   void one_color_all(int cred, int cgrn, int cblu) ; //-SET ALL LEDS TO ONE COLOR
   void one_color_allNOSHOW(int cred, int cgrn, int cblu) ; //-SET ALL LEDS TO ONE COLOR
 
-  /* Loops through a bunch of different effects */
-  void demo_mode();
-
   /* Lighting Effects */
   void rainbow_strobe(int idelay) ;
   void rainbow_fade(int idelay) ; //-FADE ALL LEDS THROUGH HSV RAINBOW
