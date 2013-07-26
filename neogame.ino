@@ -14,7 +14,7 @@
 #include "game.h"
 
 #define NUM_LEDS 240
-int mode = SPECTRUM_MODE;
+int mode = FREEPLAY_MODE;
 
 Button button1 = Button(A6);
 Button button2 = Button(A7);

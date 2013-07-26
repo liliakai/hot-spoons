@@ -1,4 +1,5 @@
 Games and lighting effects for a WS2811 LED strand.
+Based largely on code from http://funkboxing.com/wordpress/?p=1366
 
 This program includes 3 game variants and an array of lighting effects.
 Game modes are two-player and require one button per player for interaction.
@@ -23,7 +24,11 @@ Same as freeplay mode but shots are also fired by audio-based triggers read
 from the analog input pins.
 
 *LIGHTSHOW MODE*
-Demonstrates a variety of lighting effects. Use buttons or serial commands to
-change effects. Serial commands should look like "m 5", where 5 is the mode number.
-If using Arduino's serial monitor, be sure to choose "Newline" in the line-ending
+Displays a single lighting effect. Use buttons or serial commands to change
+effects. Serial commands should look like "m 5", where 5 is the mode number. If
+using Arduino's serial monitor, be sure to choose "Newline" in the line-ending
 dropdown seletor box.
+
+*DEMO MODE*
+Loops through various effects, blocks out serial commands and button inputs for a while.
+To exit demo mode you will probably need to hit the reset button.
