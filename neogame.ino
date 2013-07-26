@@ -20,7 +20,7 @@ SerialCommand sCmd;
 void setup() {
   Serial.begin(115200);
 
-  sCmd.addCommand("m",   set_mode_strip);
+  sCmd.addCommand("m",   set_lightshow_mode);
   sCmd.setDefaultHandler(unrecognized);
 
   strip.setup();
@@ -38,15 +38,25 @@ void loop() {
     setup();
   }
 
+  sCmd.readSerial(); // process serial commands
+
   if (mode == LIGHTSHOW_MODE) {
-    lightshow_loop();
+    if(button1.pressed()) {
+      strip.prev_mode();
+    }
+    if(button3.pressed()) {
+      strip.next_mode();
+    }
+
+    strip.loop();
   }
   else {
     g.loop();
   }
 }
 
-void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO WORK RIGHT
+// Called by SerialCommand to handle light show mode change commands
+void set_lightshow_mode() {
   char *arg;
   arg = sCmd.next();
 
@@ -55,21 +65,6 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
   }
 }
 
-//------------------MAIN LOOP------------------
-void lightshow_loop() {
-  if(button1.pressed()) {
-    strip.prev_mode();
-  }
-  if(button3.pressed()) {
-    strip.next_mode();
-  }
-
-  sCmd.readSerial();     //-PROCESS SERIAL COMMANDS
-
-  strip.loop();
-}
-
-// GETS CALLED BY SERIALCOMMAND WHEN NO MATCHING COMMAND
 void unrecognized(const char *command) {
-  Serial.println("nothin fo ya...");
+  Serial.println("wat");
 }
