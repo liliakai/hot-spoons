@@ -1,4 +1,3 @@
-#include <Adafruit_NeoPixel.h>
 #include <FastSPI_LED2.h>
 #include <SerialCommand.h>
 #include "fastspi_strip.h"
