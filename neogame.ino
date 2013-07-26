@@ -53,8 +53,6 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
   if (arg != NULL) {
     strip.set_mode(atoi(arg));
   }
-  Serial.print("~~~***NEW MODE-");
-  Serial.println(strip.ledMode);
 }
 
 //------------------MAIN LOOP------------------
@@ -70,13 +68,6 @@ void lightshow_loop() {
 
   strip.loop();
 }
-
-void set_lightshow_mode(int mode) {
-  strip.set_mode(mode);
-  Serial.print("~~~***NEW MODE-");
-  Serial.println(strip.ledMode);
-}
-
 
 // GETS CALLED BY SERIALCOMMAND WHEN NO MATCHING COMMAND
 void unrecognized(const char *command) {

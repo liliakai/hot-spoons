@@ -1211,6 +1211,8 @@ void fastspi_strip::loop() {
 
 void fastspi_strip::set_mode(int newMode) {
   ledMode = newMode;
+  Serial.print("~~~***NEW MODE-");
+  Serial.println(ledMode);
   if (ledMode == 13) {  //-FOR CELL AUTO
     random_red();
   }
