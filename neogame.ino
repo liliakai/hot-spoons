@@ -28,7 +28,7 @@ void setup() {
   sCmd.addCommand("m",   set_lightshow_effect);
   sCmd.setDefaultHandler(unrecognized);
 
-  strip.setup();
+  strip.off();
 
   if (mode < LIGHTSHOW_MODE) {
     g.setup(mode);

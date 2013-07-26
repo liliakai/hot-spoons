@@ -31,8 +31,7 @@ fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/
   LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
 }
 
-//------------------SETUP------------------
-void fastspi_strip::setup()
+void fastspi_strip::off()
 {
   one_color_allNOSHOW(0,0,0); //-BLANK STRIP
   LEDS.show();
