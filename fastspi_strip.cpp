@@ -14,7 +14,7 @@
 
 #include "fastspi_strip.h"
 
-#define DEFAULT_EFFECT
+#define DEFAULT_EFFECT 1
 #define DATA_PIN 13
 #define MAX_EFFECT_NUMBER 36 // last effect to hit when cycling through next/prev
 
@@ -31,10 +31,9 @@ fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/
   LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
 }
 
-void fastspi_strip::off()
+void fastspi_strip::clear()
 {
-  one_color_allNOSHOW(0,0,0); //-BLANK STRIP
-  LEDS.show();
+  LEDS.clear();
 }
 
 //------------------MAIN LOOP------------------

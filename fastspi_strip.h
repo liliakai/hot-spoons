@@ -31,7 +31,7 @@ public:
   struct CRGB* leds;
 
   fastspi_strip(int n);
-  void off();
+  void clear();
   void loop();
   void set_effect(int num);
   void next();

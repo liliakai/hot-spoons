@@ -4,6 +4,7 @@
 #include "button.h"
 
 #define SERIALCOMMAND_DEBUG 1
+
 #define FREEPLAY_MODE 0
 #define SPECTRUM_MODE 1
 #define TIMING_MODE 2
@@ -24,11 +25,13 @@ SerialCommand sCmd;
 
 void setup() {
   Serial.begin(115200);
+  Serial.print("Mode ");
+  Serial.print(mode);
 
   sCmd.addCommand("m",   set_lightshow_effect);
   sCmd.setDefaultHandler(unrecognized);
 
-  strip.off();
+  strip.clear();
 
   if (mode < LIGHTSHOW_MODE) {
     g.setup(mode);
