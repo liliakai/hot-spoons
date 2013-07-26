@@ -45,7 +45,7 @@ public:
     }
 
     for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
-      strip.leds[i] = puck_color;
+      strip.set_color_led(i, puck_color);
     }
 
     for (int i=puck-PUCK_PADDING-1; i > 0; i--) {
@@ -157,7 +157,7 @@ public:
     Serial.println("pew!");
     whichTune = PEW;  // make the PEW noise!
     for (int i=0; i < SHOT; i++) {
-      strip.leds[i] = color1; // b1 fires a shot from 0!
+      strip.set_color_led(i, color1);
     }
     b1fired+=SHOT;  // lock everything out until it's gone
   }
@@ -166,9 +166,8 @@ public:
     Serial.println("bew!");
     whichTune = BEW;  // make the BEW noise!
     for (int i=0; i < SHOT; i++) {
-      strip.leds[num_leds-1-i] = color2; // b2 fires a shot from n-1!
+      strip.set_color_led(num_leds-1-i, color2);
     }
     b2fired+=SHOT;  // lock everything out until it's gone
   }
-
 };

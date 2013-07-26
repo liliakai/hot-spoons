@@ -39,6 +39,10 @@ void fastspi_strip::set_color_led(int idex, int cred, int cgrn, int cblu) {
   leds[idex].b = cblu;
 }
 
+void fastspi_strip::set_color_led(int idex, CRGB& color) {
+  leds[idex] = color;
+}
+
 
 //-FIND INDEX OF HORIZONAL OPPOSITE LED
 int fastspi_strip::horizontal_index(int i) {

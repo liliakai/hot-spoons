@@ -38,6 +38,7 @@ public:
   void prev_mode();
 
   void set_color_led(int adex, int cred, int cgrn, int cblu);
+  void set_color_led(int adex, CRGB& color);
   void one_color_all(int cred, int cgrn, int cblu) ; //-SET ALL LEDS TO ONE COLOR
   void one_color_allNOSHOW(int cred, int cgrn, int cblu) ; //-SET ALL LEDS TO ONE COLOR
 
