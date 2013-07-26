@@ -25,7 +25,7 @@ SerialCommand sCmd;
 void setup() {
   Serial.begin(115200);
 
-  sCmd.addCommand("m",   set_lightshow_mode);
+  sCmd.addCommand("m",   set_lightshow_effect);
   sCmd.setDefaultHandler(unrecognized);
 
   strip.setup();
@@ -50,10 +50,10 @@ void loop() {
   }
   if (mode == LIGHTSHOW_MODE) {
     if(button1.pressed()) {
-      strip.prev_mode();
+      strip.prev();
     }
     if(button3.pressed()) {
-      strip.next_mode();
+      strip.next();
     }
 
     strip.loop();
@@ -64,12 +64,12 @@ void loop() {
 }
 
 // Called by SerialCommand to handle light show mode change commands
-void set_lightshow_mode() {
+void set_lightshow_effect() {
   char *arg;
   arg = sCmd.next();
 
   if (arg != NULL) {
-    strip.set_mode(atoi(arg));
+    strip.set_effect(atoi(arg));
   }
 }
 

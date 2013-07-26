@@ -8,7 +8,7 @@ class fastspi_strip {
 
   int** ledsX;
 
-  int ledMode;
+  int effectNumber;
 
   int idex;             //-LED INDEX (0 to num_leds-1
   int ihue;             //-HUE (0-360)
@@ -33,9 +33,9 @@ public:
   fastspi_strip(int n);
   void setup();
   void loop();
-  void set_mode(int newMode);
-  void next_mode();
-  void prev_mode();
+  void set_effect(int num);
+  void next();
+  void prev();
 
   void set_color_led(int adex, int cred, int cgrn, int cblu);
   void set_color_led(int adex, CRGB& color);

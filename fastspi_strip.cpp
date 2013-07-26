@@ -14,12 +14,12 @@
 
 #include "fastspi_strip.h"
 
-#define DEFAULT_LED_MODE 5
+#define DEFAULT_EFFECT
 #define DATA_PIN 13
-#define MAX_MODE 36 // last mode to hit when cycling through next/prev
+#define MAX_EFFECT_NUMBER 36 // last effect to hit when cycling through next/prev
 
 fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
-  ledMode(DEFAULT_LED_MODE)
+  effectNumber(DEFAULT_EFFECT)
 {
   leds = new CRGB[num_leds];
   ledsX = new int*[num_leds];
@@ -41,7 +41,7 @@ void fastspi_strip::setup()
 //------------------MAIN LOOP------------------
 void fastspi_strip::loop() {
 
-  switch(ledMode) {
+  switch(effectNumber) {
     case 0:
       one_color_all(0,0,0);             //---STRIP OFF - "0"
       break;
@@ -156,19 +156,23 @@ void fastspi_strip::loop() {
   }
 }
 
-void fastspi_strip::set_mode(int newMode) {
-  ledMode = newMode;
-  Serial.print("~~~***NEW MODE-");
-  Serial.println(ledMode);
-  if (ledMode == 13) {  //-FOR CELL AUTO
+void fastspi_strip::set_effect(int num) {
+  effectNumber = num;
+  Serial.print("~~~***NEW EFFECT-");
+  Serial.println(effectNumber);
+  if (effectNumber == 13) {  //-FOR CELL AUTO
     random_red();
   }
 }
-void fastspi_strip::next_mode() {
-  set_mode( (ledMode+1) % MAX_MODE );
+void fastspi_strip::next() {
+  set_effect( (effectNumber+1) % MAX_EFFECT_NUMBER );
 }
-void fastspi_strip::prev_mode() {
-  set_mode( (ledMode-1) % MAX_MODE );
+void fastspi_strip::prev() {
+  if (effectNumber) {
+    set_effect( (effectNumber-1) % MAX_EFFECT_NUMBER );
+  } else {
+    set_effect(MAX_EFFECT_NUMBER);
+  }
 }
 //-SET THE COLOR OF A SINGLE RGB LED
 void fastspi_strip::set_color_led(int idex, int cred, int cgrn, int cblu) {
