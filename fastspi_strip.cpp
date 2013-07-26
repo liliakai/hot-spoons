@@ -16,7 +16,7 @@
 
 #define DEFAULT_LED_MODE 5
 #define DATA_PIN 13
-#define MAX_MODE 28 // last mode to hit when cycling through next/prev
+#define MAX_MODE 36 // last mode to hit when cycling through next/prev
 
 fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
   ledMode(DEFAULT_LED_MODE)
@@ -1020,46 +1020,119 @@ void fastspi_strip::setup()
 //------------------MAIN LOOP------------------
 void fastspi_strip::loop() {
 
-  if (ledMode == 0) { one_color_all(0,0,0); }            //---STRIP OFF - "0"
-  if (ledMode == 1) { one_color_all(255,255,255); }      //---STRIP SOLID WHITE
-  if (ledMode == 2) { rainbow_fade(0); }                //---STRIP RAINBOW FADE
-  if (ledMode == 3) { rainbow_loop(10, 10); }            //---RAINBOW LOOP
-  if (ledMode == 4) { random_burst(10); }                //---RANDOM
-  if (ledMode == 5) { color_bounce(10); }                //---CYLON v1
-  if (ledMode == 6) { color_bounceFADE(10); }            //---CYLON v2
-  if (ledMode == 7) { police_lightsONE(20); }            //---POLICE SINGLE
-  if (ledMode == 8) { police_lightsALL(10); }            //---POLICE SOLID
-  if (ledMode == 9) { flicker(200,255); }                //---STRIP FLICKER 
-  if (ledMode == 10) { pulse_one_color_all(0, 5); }     //--- PULSE COLOR BRIGHTNESS
-  if (ledMode == 11) { pulse_one_color_all_rev(0, 5); } //--- PULSE COLOR SATURATION   
-  if (ledMode == 12) { fade_vertical(240, 20); }         //--- VERTICAL SOMETHING
-  if (ledMode == 13) { rule30(100); }                    //--- CELL AUTO - RULE 30 (RED)
-  if (ledMode == 14) { random_march(30); }               //--- MARCH RANDOM COLORS
-  if (ledMode == 15) { rwb_march(50); }                  //--- MARCH RWB COLORS
-  if (ledMode == 16) { radiation(120, 60); }             //--- RADIATION SYMBOL (OR SOME APPROXIMATION)
-  if (ledMode == 17) { color_loop_vardelay(50, 200); }          //--- VARIABLE DELAY LOOP
-  if (ledMode == 18) { white_temps(); }                  //--- WHITE TEMPERATURES
-  if (ledMode == 19) { sin_bright_wave(240, 35); }       //--- SIN WAVE BRIGHTNESS
-  if (ledMode == 20) { pop_horizontal(300, 20); }       //--- POP LEFT/RIGHT
-  if (ledMode == 21) { quad_bright_curve(240, 100); }    //--- QUADRATIC BRIGHTNESS CURVE  
-  if (ledMode == 22) { flame(); }                        //--- FLAME-ISH EFFECT
-  if (ledMode == 23) { rainbow_vertical(10, 20); }       //--- VERITCAL RAINBOW
-  if (ledMode == 24) { pacman(100); }                     //--- PACMAN
-  if (ledMode == 25) { rainbow_strobe(100); }                //---STRIP RAINBOW FADE
-  if (ledMode == 26) { pop_random(300, 20); }       //--- POP randomly
-  if (ledMode == 27) { random_red(); }       //randomize
-  if (ledMode == 28) { beat_march(10); }
-  
-  if (ledMode == 98) { strip_march_ccw(100); }           //--- MARCH WHATEVERS ON THE STRIP NOW CC-W
-  if (ledMode == 99) { strip_march_cw(100); }            //--- MARCH WHATEVERS ON THE STRIP NOW C-W
-
-  if (ledMode == 101) { one_color_all(255,0,0); }    //---101- STRIP SOLID RED
-  if (ledMode == 102) { one_color_all(0,255,0); }    //---102- STRIP SOLID GREEN
-  if (ledMode == 103) { one_color_all(0,0,255); }    //---103- STRIP SOLID BLUE
-  if (ledMode == 104) { one_color_all(255,255,0); }  //---104- STRIP SOLID YELLOW
-  if (ledMode == 105) { one_color_all(0,255,255); }  //---105- STRIP SOLID TEAL?
-  if (ledMode == 106) { one_color_all(255,0,255); }  //---106- STRIP SOLID VIOLET?
-
+  switch(ledMode) {
+    case 0:
+      one_color_all(0,0,0);             //---STRIP OFF - "0"
+      break;
+    case 1:
+      color_bounce(10);                 //---CYLON v1
+      break;
+    case 2:
+      color_bounceFADE(10);             //---CYLON v2
+      break;
+    case 3:
+      police_lightsONE(20);             //---POLICE SINGLE
+      break;
+    case 4:
+      one_color_all(255,255,255);       //---STRIP SOLID WHITE
+      break;
+    case 5:
+      rainbow_fade(0);                 //---STRIP RAINBOW FADE
+      break;
+    case 6:
+      rainbow_loop(10, 10);             //---RAINBOW LOOP
+      break;
+    case 7:
+      random_burst(10);                 //---RANDOM
+      break;
+    case 8:
+      police_lightsALL(10);             //---POLICE SOLID
+      break;
+    case 9:
+      flicker(200,255);                 //---STRIP FLICKER
+      break;
+    case 10:
+      pulse_one_color_all(0, 5);      //--- PULSE COLOR BRIGHTNESS
+      break;
+    case 11:
+      pulse_one_color_all_rev(0, 5);  //--- PULSE COLOR SATURATION
+      break;
+    case 12:
+      fade_vertical(240, 20);          //--- VERTICAL SOMETHING
+      break;
+    case 13:
+      rule30(100);                     //--- CELL AUTO - RULE 30 (RED)
+      break;
+    case 14:
+      random_march(30);                //--- MARCH RANDOM COLORS
+      break;
+    case 15:
+      rwb_march(50);                   //--- MARCH RWB COLORS
+      break;
+    case 16:
+      radiation(120, 60);              //--- RADIATION SYMBOL (OR SOME APPROXIMATION)
+      break;
+    case 17:
+      color_loop_vardelay(50, 200);           //--- VARIABLE DELAY LOOP
+      break;
+    case 18:
+      white_temps();                   //--- WHITE TEMPERATURES
+      break;
+    case 19:
+      sin_bright_wave(240, 35);        //--- SIN WAVE BRIGHTNESS
+      break;
+    case 20:
+      pop_horizontal(300, 20);        //--- POP LEFT/RIGHT
+      break;
+    case 21:
+      quad_bright_curve(240, 100);     //--- QUADRATIC BRIGHTNESS CURVE
+      break;
+    case 22:
+      flame();                         //--- FLAME-ISH EFFECT
+      break;
+    case 23:
+      rainbow_vertical(10, 20);        //--- VERITCAL RAINBOW
+      break;
+    case 24:
+      pacman(100);                      //--- PACMAN
+      break;
+    case 25:
+      rainbow_strobe(100);                 //---STRIP RAINBOW FADE
+      break;
+    case 26:
+      pop_random(300, 20);        //--- POP randomly
+      break;
+    case 27:
+      random_red();        //randomize
+      break;
+    case 28:
+      beat_march(10);
+      break;
+    case 29:
+      strip_march_ccw(100);            //--- MARCH WHATEVERS ON THE STRIP NOW CC-W
+      break;
+    case 30:
+      strip_march_cw(100);             //--- MARCH WHATEVERS ON THE STRIP NOW C-W
+      break;
+    case 31:
+      one_color_all(255,0,0);     //---101- STRIP SOLID RED
+      break;
+    case 32:
+      one_color_all(0,255,0);     //---102- STRIP SOLID GREEN
+      break;
+    case 33:
+      one_color_all(0,0,255);     //---103- STRIP SOLID BLUE
+      break;
+    case 34:
+      one_color_all(255,255,0);   //---104- STRIP SOLID YELLOW
+      break;
+    case 35:
+      one_color_all(0,255,255);   //---105- STRIP SOLID TEAL?
+      break;
+    case 36:
+      one_color_all(255,0,255);   //---106- STRIP SOLID VIOLET?
+      break;
+  }
 }
 
 void fastspi_strip::set_mode(int newMode) {
