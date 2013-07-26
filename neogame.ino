@@ -60,10 +60,10 @@ void set_mode_strip() {    //-SETS THE MODE (SOME MODES REQUIRE RANDOM STARTS TO
 //------------------MAIN LOOP------------------
 void lightshow_loop() {
   if(button1.pressed()) {
-    set_lightshow_mode((strip.ledMode-1) % 28);
+    strip.prev_mode();
   }
   if(button3.pressed()) {
-    set_lightshow_mode((strip.ledMode+1) % 28);
+    strip.next_mode();
   }
 
   sCmd.readSerial();     //-PROCESS SERIAL COMMANDS

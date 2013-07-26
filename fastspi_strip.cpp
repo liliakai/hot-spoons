@@ -16,6 +16,7 @@
 
 #define DEFAULT_LED_MODE 5
 #define DATA_PIN 13
+#define MAX_MODE 28 // last mode to hit when cycling through next/prev
 
 fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
 	ledMode(DEFAULT_LED_MODE)
@@ -1213,4 +1214,10 @@ void fastspi_strip::set_mode(int newMode) {
   if (ledMode == 13) {  //-FOR CELL AUTO
     random_red();
   }
+}
+void fastspi_strip::next_mode() {
+  set_mode( (ledMode+1) % MAX_MODE );
+}
+void fastspi_strip::prev_mode() {
+  set_mode( (ledMode-1) % MAX_MODE );
 }

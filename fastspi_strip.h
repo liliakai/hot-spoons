@@ -67,4 +67,6 @@ public:
   void demo_mode();
   void set_mode(int newMode);
   void strip_march_iw();
+  void next_mode();
+  void prev_mode();
 };
