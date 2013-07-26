@@ -1,14 +1,11 @@
 #include <FastSPI_LED2.h>
 
 class fastspi_strip {
-public:
-
   int BOTTOM_INDEX;
   int TOP_INDEX;
   int EVENODD;
   int num_leds;
 
-  struct CRGB* leds;
   int** ledsX;
 
   int ledMode;
@@ -21,10 +18,7 @@ public:
   int lcount;
   float tcount;
 
-  fastspi_strip(int n);
-  void loop();
-  void setup();
-  void set_color_led(int adex, int cred, int cgrn, int cblu);
+  /* Convenience functions */
   int horizontal_index(int i);
   int antipodal_index(int i);
   int adjacent_cw(int i);
@@ -32,8 +26,25 @@ public:
   void HSVtoRGB(int hue, int sat, int val, int colors[3]);
   void copy_led_array();
   void print_led_arrays(int ilen);
+
+public:
+  struct CRGB* leds;
+
+  fastspi_strip(int n);
+  void setup();
+  void loop();
+  void set_mode(int newMode);
+  void next_mode();
+  void prev_mode();
+
+  void set_color_led(int adex, int cred, int cgrn, int cblu);
   void one_color_all(int cred, int cgrn, int cblu) ; //-SET ALL LEDS TO ONE COLOR
   void one_color_allNOSHOW(int cred, int cgrn, int cblu) ; //-SET ALL LEDS TO ONE COLOR
+
+  /* Loops through a bunch of different effects */
+  void demo_mode();
+
+  /* Lighting Effects */
   void rainbow_strobe(int idelay) ;
   void rainbow_fade(int idelay) ; //-FADE ALL LEDS THROUGH HSV RAINBOW
   void rainbow_loop(int istep, int idelay) ; //-LOOP HSV RAINBOW
@@ -52,8 +63,6 @@ public:
   void rwb_march(int idelay) ; //R,W,B MARCH CCW
   void white_temps() ;
   void color_loop_vardelay(int iperiod, int idelay) ; //-COLOR LOOP (SINGLE LED) w/ VARIABLE DELAY
-  void strip_march_cw(int idelay) ; //-MARCH STRIP C-W
-  void strip_march_ccw(int idelay) ; //-MARCH STRIP C-W 
   void pop_random(int ahue, int idelay) ;
   void pop_horizontal(int ahue, int idelay) ;  //-POP FROM LEFT TO RIGHT UP THE RING
   void quad_bright_curve(int ahue, int idelay) ;  //-QUADRATIC BRIGHTNESS CURVER
@@ -64,9 +73,7 @@ public:
   void rainbow_vertical(int istep, int idelay) ; //-RAINBOW 'UP' THE LOOP
   void pacman(int idelay) ; //-MARCH STRIP C-W
   void beat_march(int iwidth) ;
-  void demo_mode();
-  void set_mode(int newMode);
+  void strip_march_cw(int idelay) ; //-MARCH STRIP C-W
+  void strip_march_ccw(int idelay) ; //-MARCH STRIP C-W 
   void strip_march_iw();
-  void next_mode();
-  void prev_mode();
 };
