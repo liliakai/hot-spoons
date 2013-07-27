@@ -18,6 +18,7 @@ public:
   int lockout;
   int b1fired;
   int b2fired;
+  int since_last_lockout;
   fastspi_strip& strip;
   Button& button1, button2;
 
@@ -84,12 +85,14 @@ public:
       handleButtons_freeplay();
     }
     else if (mode == TIMING_MODE) {
-      if (!b1fired && !b2fired && !lockout && random(250) == 0) {
+      if (!b1fired && !b2fired && !lockout && (random(250) == 0 || since_last_lockout > 1000)) {
         lockout = 500;
+        since_last_lockout = 0;
       }
       else if (lockout) {
         lockout--;
       }
+      since_last_lockout++;
       handleButtons_timing();
     }
     else if (mode == SPECTRUM_MODE) {
