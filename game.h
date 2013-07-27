@@ -1,8 +1,5 @@
 #include "spectrum.h"
 #include "noise.h"
-#define FREEPLAY_MODE 0
-#define SPECTRUM_MODE 1
-#define TIMING_MODE 2
 #define TIMEWINDOW 30
 #define SHOT 10
 #define PENALTY 4
@@ -144,7 +141,7 @@ public:
 
     if (lockout && (b1 || b2)) {
         if (b1) {
-        b1fire();
+          b1fire();
         }
         if (b2) {
           b2fire();

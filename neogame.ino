@@ -5,16 +5,16 @@
 
 #define SERIALCOMMAND_DEBUG 1
 
-#define FREEPLAY_MODE 0
-#define SPECTRUM_MODE 1
-#define TIMING_MODE 2
+#define TIMING_MODE 0
+#define FREEPLAY_MODE 1
+#define SPECTRUM_MODE 2
 #define LIGHTSHOW_MODE 3
 #define DEMO_MODE 4
 #define MAX_MODE 5
 #include "game.h"
 
 #define NUM_LEDS 240
-int mode = FREEPLAY_MODE;
+int mode = TIMING_MODE;
 
 Button button1 = Button(A6);
 Button button2 = Button(A7);
