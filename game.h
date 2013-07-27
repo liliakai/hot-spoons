@@ -69,18 +69,6 @@ public:
       puck--;
     }
 
-    if (puck == 0) {
-      if (mode != SPECTRUM_MODE)
-        strip.flash(color2, 10, 100);
-      setup();
-    }
-
-    if (puck == num_leds-1) {
-      if (mode != SPECTRUM_MODE)
-        strip.flash(color1, 10, 100);
-      setup();
-    }
-
     if (mode == FREEPLAY_MODE) {
       handleButtons_freeplay();
     }
@@ -99,6 +87,18 @@ public:
       handleSpectrum();
     }
     LEDS.show();
+
+    if (puck == 0) {
+      if (mode != SPECTRUM_MODE)
+        strip.flash(color2, 10, 100);
+      setup();
+    }
+
+    if (puck == num_leds-1) {
+      if (mode != SPECTRUM_MODE)
+        strip.flash(color1, 10, 100);
+      setup();
+    }
   }
 
   void handleSpectrum () {
