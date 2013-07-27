@@ -132,7 +132,7 @@ public:
     boolean b2 = button2.pressed();
     if (!lockout) {
         if (b1) {
-          puck -= PENALTY; // punish the guilty (they pressed and were not seconded)
+          puck -= PENALTY;
         }
         if (b2) {
           puck += PENALTY;
