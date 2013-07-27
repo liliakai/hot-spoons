@@ -2,16 +2,18 @@
 #include <SerialCommand.h>
 #include "fastspi_strip.h"
 #include "button.h"
+#include "game.h"
 
 #define SERIALCOMMAND_DEBUG 1
 
-#define TIMING_MODE 0
-#define FREEPLAY_MODE 1
-#define SPECTRUM_MODE 2
-#define LIGHTSHOW_MODE 3
-#define DEMO_MODE 4
-#define MAX_MODE 5
-#include "game.h"
+enum {
+  TIMING_MODE = game::timing_mode,
+  FREEPLAY_MODE = game::freeplay_mode,
+  SPECTRUM_MODE = game::spectrum_mode,
+  LIGHTSHOW_MODE,
+  DEMO_MODE,
+  MAX_MODE
+};
 
 #define NUM_LEDS 240
 int mode = TIMING_MODE;

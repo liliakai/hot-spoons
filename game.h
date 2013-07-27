@@ -11,6 +11,11 @@ CRGB color2 = CRGB(0, 255, 0);
 class game {
 
 public:
+  enum {
+    timing_mode,
+    freeplay_mode,
+    spectrum_mode
+  };
 
   int num_leds;
   int mode;
@@ -69,10 +74,10 @@ public:
       puck--;
     }
 
-    if (mode == FREEPLAY_MODE) {
+    if (mode == freeplay_mode) {
       handleButtons_freeplay();
     }
-    else if (mode == TIMING_MODE) {
+    else if (mode == timing_mode) {
       if (!b1fired && !b2fired && !lockout && (random(250) == 0 || since_last_lockout > 1000)) {
         lockout = 500;
         since_last_lockout = 0;
@@ -83,19 +88,19 @@ public:
       since_last_lockout++;
       handleButtons_timing();
     }
-    else if (mode == SPECTRUM_MODE) {
+    else if (mode == spectrum_mode) {
       handleSpectrum();
     }
     LEDS.show();
 
     if (puck == 0) {
-      if (mode != SPECTRUM_MODE)
+      if (mode != spectrum_mode)
         strip.flash(color2, 10, 100);
       setup();
     }
 
     if (puck == num_leds-1) {
-      if (mode != SPECTRUM_MODE)
+      if (mode != spectrum_mode)
         strip.flash(color1, 10, 100);
       setup();
     }
