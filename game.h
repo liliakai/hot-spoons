@@ -5,11 +5,13 @@
 #define PENALTY 4
 #define PUCK_PADDING 1 // must be odd
 
-CRGB color1 = CRGB(255, 0, 0);
-CRGB color2 = CRGB(0, 255, 0);
+CRGB color1 = CRGB(0, 0, 255);
+CRGB color2 = CRGB(128, 0, 128);
+CRGB off = CRGB(0);
+CRGB red = CRGB(255,0,0);
+CRGB green = CRGB(0,255,0);
 
 class game {
-
 public:
   enum {
     timing_mode,
@@ -42,9 +44,9 @@ public:
 
   void loop() {
     makeNoise();
-    CRGB puck_color = CRGB(0,0,255);
+    CRGB puck_color = red;
     if (lockout) {
-      puck_color = CRGB(128,128,128);
+      puck_color = green;
     }
 
     for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
@@ -61,14 +63,14 @@ public:
     }
     strip.set_color_led(num_leds-1, 0, 0, 0);
 
-    if (strip.leds[puck-PUCK_PADDING-1] != CRGB(0)) {
+    if (strip.leds[puck-PUCK_PADDING-1] != off) {
       strip.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
       if (b1fired) b1fired--;
 
       puck++;
     }
 
-    if (strip.leds[puck+PUCK_PADDING+1] != CRGB(0)) {
+    if (strip.leds[puck+PUCK_PADDING+1] != off) {
       strip.set_color_led(puck+PUCK_PADDING+1, 0, 0, 0);
       if (b2fired) b2fired--;
       puck--;
