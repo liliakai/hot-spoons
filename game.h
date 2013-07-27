@@ -96,16 +96,18 @@ public:
     LEDS.show();
 
     if (puck == 0) {
-      if (mode != spectrum_mode)
-        strip.flash(color2, 10, 100);
-      setup();
+      winner(color2);
     }
 
     if (puck == num_leds-1) {
-      if (mode != spectrum_mode)
-        strip.flash(color1, 10, 100);
-      setup();
+      winner(color1);
     }
+  }
+
+  void winner(CRGB color) {
+    if (mode != spectrum_mode)
+      strip.flash(color, 10, 100);
+    setup();
   }
 
   void handleSpectrum () {
