@@ -53,26 +53,28 @@ public:
       strip.set_color_led(i, puck_color);
     }
 
+    b1fired = 0;
     for (int i=puck-PUCK_PADDING-1; i > 0; i--) {
+      b1fired |= strip.leds[i].r | strip.leds[i].g | strip.leds[i].b;
       strip.leds[i] = strip.leds[i-1];
     }
     strip.set_color_led(0, 0, 0, 0);
 
+    b2fired = 0;
     for (int i=puck+PUCK_PADDING+1; i < num_leds-1; i++) {
+      b2fired |= strip.leds[i].r | strip.leds[i].g | strip.leds[i].b;
       strip.leds[i] = strip.leds[i+1];
     }
     strip.set_color_led(num_leds-1, 0, 0, 0);
 
     if (strip.leds[puck-PUCK_PADDING-1] != off) {
       strip.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
-      if (b1fired) b1fired--;
 
       puck++;
     }
 
     if (strip.leds[puck+PUCK_PADDING+1] != off) {
       strip.set_color_led(puck+PUCK_PADDING+1, 0, 0, 0);
-      if (b2fired) b2fired--;
       puck--;
     }
 
