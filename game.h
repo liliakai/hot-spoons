@@ -5,11 +5,12 @@
 #define PENALTY 4
 #define PUCK_PADDING 1 // must be odd
 
-CRGB color1 = CRGB(0, 0, 255);
+CRGB color1 = CRGB(0, 255, 0);
 CRGB color2 = CRGB(128, 0, 128);
 CRGB off = CRGB(0);
 CRGB red = CRGB(255,0,0);
 CRGB green = CRGB(0,255,0);
+CRGB blue = CRGB(0,0,255);
 
 class game {
 public:
@@ -46,7 +47,7 @@ public:
     makeNoise();
     CRGB puck_color = red;
     if (lockout) {
-      puck_color = green;
+      puck_color = blue;
     }
 
     for (int i=puck - PUCK_PADDING; i < puck + PUCK_PADDING+1; i++) {
