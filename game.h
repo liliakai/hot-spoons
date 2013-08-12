@@ -1,4 +1,3 @@
-#include "spectrum.h"
 #include "noise.h"
 #define TIMEWINDOW 30
 #define SHOT 10
@@ -14,14 +13,7 @@ CRGB blue = CRGB(0,0,255);
 
 class game {
 public:
-  enum {
-    timing_mode,
-    freeplay_mode,
-    spectrum_mode
-  };
-
   int num_leds;
-  int mode;
   int puck;
   int lockout;
   int b1fired;
@@ -35,8 +27,7 @@ public:
     setup();
   }
 
-  void setup(int gameMode=-1) {
-    if (gameMode >=0) mode = gameMode;
+  void setup() {
     puck = num_leds/2 + 1;
     lockout = 0;
     b1fired = 0;
@@ -79,23 +70,16 @@ public:
       puck--;
     }
 
-    if (mode == freeplay_mode) {
-      handleButtons_freeplay();
+    if (!b1fired && !b2fired && !lockout && (random(250) == 0 || since_last_lockout > 1000)) {
+      lockout = 500;
+      since_last_lockout = 0;
     }
-    else if (mode == timing_mode) {
-      if (!b1fired && !b2fired && !lockout && (random(250) == 0 || since_last_lockout > 1000)) {
-        lockout = 500;
-        since_last_lockout = 0;
-      }
-      else if (lockout) {
-        lockout--;
-      }
-      since_last_lockout++;
-      handleButtons_timing();
+    else if (lockout) {
+      lockout--;
     }
-    else if (mode == spectrum_mode) {
-      handleSpectrum();
-    }
+    since_last_lockout++;
+    handleButtons_timing();
+
     LEDS.show();
 
     if (puck == 0) {
@@ -108,35 +92,8 @@ public:
   }
 
   void winner(CRGB color) {
-    if (mode != spectrum_mode)
-      strip.flash(color, 10, 100);
+    strip.flash(color, 10, 100);
     setup();
-  }
-
-  void handleSpectrum () {
-    boolean b1 = button1.pressed() || spectrum(LOW_SPECTRUM);
-    boolean b2 = button2.pressed() || spectrum(HIGH_SPECTRUM);
-
-    if (b1) {
-      b1fire();
-    }
-    if (b2) {
-      b2fire();
-    }
-  }
-
-  void handleButtons_freeplay() {
-    boolean b1 = button1.read();
-    boolean b2 = button2.read();
-
-    if (b1 == 0) {
-      b1fire();
-    }
-
-    if (b2 == 0) {
-      b2fire();
-    }
-
   }
 
   void handleButtons_timing() {
