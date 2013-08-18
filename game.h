@@ -59,6 +59,10 @@ public:
     }
     strip.set_color_led(num_leds-1, 0, 0, 0);
 
+    if (!b1fired && !b2fired) {
+      whichTune = -1;
+    }
+
     if (strip.leds[puck-PUCK_PADDING-1] != off) {
       strip.set_color_led(puck-PUCK_PADDING-1, 0, 0, 0);
 
