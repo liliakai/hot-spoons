@@ -1,34 +1,35 @@
-Games and lighting effects for a WS2811 LED strand.
-Based largely on code from http://funkboxing.com/wordpress/?p=1366
+Hot Spoons!
+-----------
 
-This program includes 3 game variants and an array of lighting effects.
-Game modes are two-player and require one button per player for interaction.
-Lightshow mode uses the same two buttons to navigate between different effects.
-A third button is used to cycle between the game variants and a lightshow mode.
-Details on each mode are given below.
+Each player taps their spoons together to launch colored projectiles from
+opposite ends of the strand toward a "puck" in the center, moving it toward the
+opposing side. Each player has their own color. We use PINK and GREEN
+projectiles and the spoons are color-coded to match. Players may only shoot
+when the puck turns BLUE which happens randomly. Shooting when the puck is RED
+will be penalized by moving the puck toward you a small distance. The game
+resets when the puck reaches one end of the strand. If using audio output,
+sounds are generated when you score.
 
-*FREEPLAY MODE*
-Each player uses their button to launch colored projectiles from opposite ends
-of the strand toward a "puck" in the center, moving it toward the
-opposing side. The game resets when the puck reaches one end of the strand.
-If using audio output, sounds are generated when you score.
+Hardware requirements:
+Arduino - I use an Arduino Mega 2560
+LED strip - I use a WS2812 strip
+5V LED power supply - amperage depends on strip length
+4 Spoons - These are wired to work as button inputs to the Arduino
 
-*TIMING MODE*
-Same as freeplay mode but players may only shoot when the puck turns white,
-which happens randomly. Shooting when the puck is not white will be penalized
-by moving the puck toward you a small distance.
-
-*SPECTRUM MODE*
-(requires additional hardware)
-Same as freeplay mode but shots are also fired by audio-based triggers read
-from the analog input pins.
-
-*LIGHTSHOW MODE*
-Displays a single lighting effect. Use buttons or serial commands to change
-effects. Serial commands should look like "m 5", where 5 is the mode number. If
-using Arduino's serial monitor, be sure to choose "Newline" in the line-ending
-dropdown seletor box.
-
-*DEMO MODE*
-Loops through various effects, blocks out serial commands and button inputs for a while.
-To exit demo mode you will probably need to hit the reset button.
+.------------------.
+| Arduino          |
+|           pin 11 -- green spoon 1
+|           pin 12 -- pink spoon 1
+|           pin 13 -- LED data wire (blue wire from LED strip)
+|                  |
+|               5V ---+-- Power supply (+)
+|                  |  +-- LED power (red wire from LED strip)
+|                  |
+|           ground ---+-- Power supply (-)
+|                  |  +-- LED ground (1 or 2 black wires from LED strip)
+|                  |  +-- green spoon 2
+|                  |  +-- pink spoon 2
+|                  |  +-- speaker (-)
+|                  |
+|           pin 53 -- 100ohm resistor -- speaker (+)
+`------------------'
