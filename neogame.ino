@@ -28,6 +28,10 @@ fastspi_strip strip = fastspi_strip(NUM_LEDS);
 game g = game(NUM_LEDS, strip, button1, button3);
 SerialCommand sCmd;
 
+void demo_mode();
+void set_lightshow_effect();
+void unrecognized(const char *command);
+
 void setup() {
   Serial.begin(115200);
   Serial.print("Mode ");
