@@ -25,7 +25,7 @@ Button button4 = Button(11);
 Button button5 = Button(12);
 
 fastspi_strip strip = fastspi_strip(NUM_LEDS);
-game g = game(NUM_LEDS, strip, button4, button5);
+game g = game(NUM_LEDS, strip, button1, button3);
 SerialCommand sCmd;
 
 void setup() {
