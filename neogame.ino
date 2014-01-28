@@ -16,7 +16,8 @@ enum {
 };
 
 #define NUM_LEDS 240
-int mode = TIMING_MODE;
+//int mode = TIMING_MODE;
+int mode=LIGHTSHOW_MODE;
 
 Button button1 = Button(A6);
 Button button2 = Button(A7);
