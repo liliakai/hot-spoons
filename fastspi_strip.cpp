@@ -14,7 +14,7 @@
 
 #include "fastspi_strip.h"
 
-#define DEFAULT_EFFECT 1
+#define DEFAULT_EFFECT 2
 #define DATA_PIN 13
 #define MAX_EFFECT_NUMBER 36 // last effect to hit when cycling through next/prev
 
