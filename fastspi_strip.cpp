@@ -321,11 +321,10 @@ void fastspi_strip::print_led_arrays(int ilen){
 //------------------------LED EFFECT FUNCTIONS------------------------
 
 void fastspi_strip::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
-  for(int i = 0 ; i < num_leds; i++ ) {
-    set_color_led(i, cred, cgrn, cblu);
-    LEDS.show();       
-    delay(1);
-  }  
+  set_color_led(idex, cred, cgrn, cblu);
+  LEDS.show();
+  delay(1);
+  idex = (idex + 1) % num_leds;
 }
 
 void fastspi_strip::one_color_allNOSHOW(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
