@@ -16,8 +16,8 @@ enum {
 };
 
 #define NUM_LEDS 240
-//int mode = TIMING_MODE;
-int mode=LIGHTSHOW_MODE;
+int mode = TIMING_MODE;
+//int mode=LIGHTSHOW_MODE;
 
 Button button1 = Button(A6);
 Button button2 = Button(A7);
@@ -26,7 +26,7 @@ Button button4 = Button(11);
 Button button5 = Button(12);
 
 fastspi_strip strip = fastspi_strip(NUM_LEDS);
-game g = game(NUM_LEDS, strip, button1, button3);
+game g = game(NUM_LEDS, strip, button4, button5);
 SerialCommand sCmd;
 
 void demo_mode();
