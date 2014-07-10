@@ -98,11 +98,11 @@ public:
     }
     LEDS.show();
 
-    if (puck == 0) {
+    if (puck <= 0) {
       winner(color2);
     }
 
-    if (puck == num_leds-1) {
+    if (puck >= num_leds-1) {
       winner(color1);
     }
   }
