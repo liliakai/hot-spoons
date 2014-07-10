@@ -1,8 +1,8 @@
 #include "spectrum.h"
 #include "noise.h"
 #define TIMEWINDOW 30
-#define SHOT 10
-#define PENALTY 4
+#define SHOT 20
+#define PENALTY 10
 #define PUCK_PADDING 1 // must be odd
 
 CRGB color1 = CRGB(0, 255, 0);
