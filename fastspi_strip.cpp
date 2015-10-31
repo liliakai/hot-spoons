@@ -22,10 +22,6 @@ fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/
   effectNumber(DEFAULT_EFFECT)
 {
   leds = new CRGB[num_leds];
-  ledsX = new int*[num_leds];
-  for (int i=0; i < num_leds; ++i) {
-    ledsX[i] = new int[3];
-  }
 
   LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, num_leds);
   LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
