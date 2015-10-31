@@ -1074,7 +1074,7 @@ void fastspi_strip::dream() { //-MARCH STRIP C-W
   int thisColor[3];
   HSVtoRGB(ihue, 255, 128, thisColor);
   one_color_allNOSHOW(0,0,0);
-  for (int i=0; i < num_leds; i+=num_leds/20) {
+  for (int i=0; i < num_leds; i+=25) {
     int x = (i+idex) % num_leds;
     int brightness = 128;
     HSVtoRGB(ihue, 255, brightness, thisColor);
