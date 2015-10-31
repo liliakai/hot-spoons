@@ -14,8 +14,8 @@
 
 #include "fastspi_strip.h"
 
-#define DEFAULT_EFFECT 2
-#define DATA_PIN 13
+#define DEFAULT_EFFECT 37
+#define DATA_PIN 19
 #define MAX_EFFECT_NUMBER 36 // last effect to hit when cycling through next/prev
 
 fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
@@ -150,6 +150,9 @@ void fastspi_strip::loop() {
       break;
     case 36:
       one_color_all(255,0,255);   //---106- STRIP SOLID VIOLET?
+      break;
+    case 37:
+      dream();   // protect your dreams
       break;
   }
 }
@@ -1062,6 +1065,53 @@ void fastspi_strip::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' TH
   delay(idelay);
 }
 
+
+void fastspi_strip::dream() { //-MARCH STRIP C-W
+  ++idex;
+  if (idex >= num_leds) {
+    idex = 0;
+  }
+  ihue++;
+  if (ihue >= 359) {
+    ihue = 0;
+  }
+  int thisColor[3];
+  HSVtoRGB(ihue, 255, 128, thisColor);
+  one_color_allNOSHOW(0,0,0);
+  for (int i=0; i < num_leds; i+=num_leds/20) {
+    int x = (i+idex) % num_leds;
+    int brightness = 128;
+    HSVtoRGB(ihue, 255, brightness, thisColor);
+    set_color_led(x, thisColor[0],thisColor[1],thisColor[2]);
+    int L = adjacent_cw(x);
+    int R = adjacent_ccw(x);
+    for (int j=0; j < 10; ++j) { // width of the pulses
+      brightness = brightness / 2;
+      HSVtoRGB(ihue, 255, brightness, thisColor);
+      set_color_led(L , thisColor[0],thisColor[1],thisColor[2] );
+      set_color_led(R , thisColor[0],thisColor[1],thisColor[2] );
+      L = adjacent_cw(L);
+      R = adjacent_ccw(R);
+    }
+  }
+
+  LEDS.show();
+
+  if (bouncedirection == 0) {
+    idelay = idelay + 4;      // slowing down
+    if (idelay >= num_leds/5) {
+      bouncedirection = 1;
+    }
+  }
+  if (bouncedirection == 1) {
+    idelay = idelay - 1;        // speeding up
+    if (idelay <= -num_leds/2) { // go negative, spend more time in fast modejjj
+      bouncedirection = 0;
+    }
+  }
+  // clamp(idelay, 0, 300)
+  delay(idelay < 0 ? 0 : (idelay > 200 ? 200 : idelay));
+}
 
 void fastspi_strip::pacman(int idelay) { //-MARCH STRIP C-W
   int s = int(num_leds/4);

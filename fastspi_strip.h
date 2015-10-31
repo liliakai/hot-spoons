@@ -10,6 +10,7 @@ class fastspi_strip {
 
   int effectNumber;
 
+  int idelay;             //-LED INDEX (0 to num_leds-1
   int idex;             //-LED INDEX (0 to num_leds-1
   int ihue;             //-HUE (0-360)
   int ibright;          //-BRIGHTNESS (0-255)
@@ -74,4 +75,5 @@ public:
   void strip_march_cw(int idelay) ; //-MARCH STRIP C-W
   void strip_march_ccw(int idelay) ; //-MARCH STRIP C-W 
   void strip_march_iw();
+  void dream();
 };
