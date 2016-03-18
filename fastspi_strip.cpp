@@ -14,7 +14,7 @@
 
 #include "fastspi_strip.h"
 
-#define DEFAULT_EFFECT 37
+#define DEFAULT_EFFECT 39
 #define DATA_PIN 19
 #define MAX_EFFECT_NUMBER 36 // last effect to hit when cycling through next/prev
 
@@ -153,6 +153,9 @@ void fastspi_strip::loop() {
       break;
     case 38:
       firekithe();   // protect your dreams
+      break;
+    case 39:
+      rainbow_pulse(10, 50);             //---RAINBOW LOOP
       break;
   }
 }
@@ -357,6 +360,30 @@ void fastspi_strip::rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAIN
 }
 
 
+void fastspi_strip::rainbow_pulse(int istep, int idelay) { //-LOOP HSV RAINBOW
+  idex++;
+  if (idex >= num_leds) {
+    idex = 0;
+  }
+
+  one_color_allNOSHOW(0,0,0);
+  int icolor[3];
+  int count;
+  int i = idex;
+  ihue = 0;
+  while (count < 50) {
+    HSVtoRGB(ihue, 255, 255, icolor);
+    set_color_led(i, icolor[0], icolor[1], icolor[2]);
+
+    i = adjacent_ccw(i);
+    ihue += 255 / 50;
+
+    ++count;
+  }
+
+  LEDS.show();
+  delay(idelay);
+}
 void fastspi_strip::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
   idex++;
   ihue = ihue + istep;

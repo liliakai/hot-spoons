@@ -48,6 +48,7 @@ public:
   void rainbow_strobe(int idelay) ;
   void rainbow_fade(int idelay) ; //-FADE ALL LEDS THROUGH HSV RAINBOW
   void rainbow_loop(int istep, int idelay) ; //-LOOP HSV RAINBOW
+  void rainbow_pulse(int istep, int idelay) ; //-LOOP HSV RAINBOW
   void random_burst(int idelay) ; //-RANDOM INDEX/COLOR
   void color_bounce(int idelay) ; //-BOUNCE COLOR (SINGLE LED)
   void police_lightsONE(int idelay) ; //-POLICE LIGHTS (TWO COLOR SINGLE LED)
