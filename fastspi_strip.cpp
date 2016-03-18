@@ -151,6 +151,9 @@ void fastspi_strip::loop() {
     case 37:
       dream();   // protect your dreams
       break;
+    case 38:
+      firekithe();   // protect your dreams
+      break;
   }
 }
 
@@ -1063,6 +1066,95 @@ void fastspi_strip::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' TH
 }
 
 
+void fastspi_strip::firekithe() {
+
+  if (bouncedirection == 0) {
+    ibright+=10;
+    if (ibright >= 255) {
+      bouncedirection = 1;
+    }
+  }
+  if (bouncedirection == 1) {
+    ibright -= 10;
+    if (ibright <= 1) {
+      bouncedirection = 0;
+      kithestate = (kithestate + 1) % 3;
+    }
+  }
+
+  one_color_allNOSHOW(0,0,0);
+  int acolor[3];
+  HSVtoRGB(30, 255, ibright, acolor);
+  if (kithestate == 0) {
+
+    // bottom left
+    for(int i = 300 ; i < 360; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // bottom right
+    for(int i = 633 ; i < 693; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+  } else if (kithestate == 1) {
+    // bottom + middle left
+    for(int i = 300 ; i < 423; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // bottom + middle right
+    for(int i = 573 ; i < 693; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+    // eyeball 1
+    for(int i = 0 ; i < 15; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+    for(int i = 45 ; i < 60; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // eyeball 2
+    for(int i = 766 ; i < 781; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+    for(int i = 810 ; i < 825; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+  } else {
+    // eyeball 1
+    for(int i = 0 ; i < 60; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // bottom left
+    for(int i = 300 ; i < 360; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    //bottom right
+    for(int i = 630 ; i < 693; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // top left
+    for(int i = 423 ; i < 490; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // top right
+    for(int i = 508 ; i < 573; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+
+    // eyeball 2
+    for(int i = 766 ; i < 825; i++ ) {
+      set_color_led(i, acolor[0], acolor[1], acolor[2]);
+    }
+  }
+  LEDS.show();
+  delay(idelay);
+}
 void fastspi_strip::dream() { //-MARCH STRIP C-W
   idex = idex + 1;
   if (idex >= num_leds) {

@@ -16,6 +16,7 @@ class fastspi_strip {
   int ibright;          //-BRIGHTNESS (0-255)
   int isat;             //-SATURATION (0-255)
   int bouncedirection;  //-SWITCH FOR COLOR BOUNCE (0-1)
+  int kithestate;  //-SWITCH FOR COLOR BOUNCE (0-1)
   int lcount;
   float tcount;
 
@@ -76,4 +77,5 @@ public:
   void strip_march_ccw(int idelay) ; //-MARCH STRIP C-W 
   void strip_march_iw();
   void dream();
+  void firekithe();
 };
