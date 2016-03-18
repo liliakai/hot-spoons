@@ -25,6 +25,7 @@ fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/
 
   LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, num_leds);
   LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
+  ihue = 120;
 }
 
 void fastspi_strip::clear()
@@ -1068,22 +1069,29 @@ void fastspi_strip::dream() { //-MARCH STRIP C-W
     idex = 0;
   }
   ihue++;
-  if (ihue >= 359) {
-    ihue = 0;
+  if (ihue >= 180) {
+    ihue = 120;
   }
+  int blue = 200;
+  int gold = 60;
   int thisColor[3];
-  HSVtoRGB(ihue, 255, 128, thisColor);
   one_color_allNOSHOW(0,0,0);
   for (int i=0; i < num_leds; i+=20) {
+    if (ihue != 0) {
+      ihue = 0;
+    } else {
+      ihue = 255;
+    }
     int x = (i+idex) % num_leds;
     int brightness = 200;
-    HSVtoRGB(ihue, 255, brightness, thisColor);
+    HSVtoRGB(blue, ihue, brightness, thisColor);
     set_color_led(x, thisColor[0],thisColor[1],thisColor[2]);
     int L = adjacent_cw(x);
     int R = adjacent_ccw(x);
     for (int j=0; j < 13; ++j) { // width of the pulses
       brightness = brightness / 2;
-      HSVtoRGB(ihue, 255, brightness, thisColor);
+      HSVtoRGB(blue, ihue, brightness, thisColor);
+
       set_color_led(L , thisColor[0],thisColor[1],thisColor[2] );
       set_color_led(R , thisColor[0],thisColor[1],thisColor[2] );
       L = adjacent_cw(L);
@@ -1093,7 +1101,7 @@ void fastspi_strip::dream() { //-MARCH STRIP C-W
 
   // random bursts
   if (random(0,10) > 5) {
-    set_color_led(random(0,num_leds), random(0,255), random(0,255), random(0,255));
+    set_color_led(random(0,num_leds), 255, 255, 0);
   }
 
   LEDS.show();

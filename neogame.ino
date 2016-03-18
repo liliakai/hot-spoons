@@ -15,7 +15,7 @@ enum {
   MAX_MODE
 };
 
-#define NUM_LEDS 788
+#define NUM_LEDS 825
 //int mode = TIMING_MODE;
 int mode=LIGHTSHOW_MODE;
 
