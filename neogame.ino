@@ -38,6 +38,8 @@ void setup() {
     g.setup(mode);
   }
 
+  delay(10000);
+
   Serial.println("---SETUP COMPLETE---");
 }
 
