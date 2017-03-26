@@ -14,26 +14,24 @@
 
 #include "fastspi_strip.h"
 
-#define DEFAULT_EFFECT 1
-#define DATA_PIN 13
+#define DEFAULT_EFFECT 37
+#define DATA_PIN 9
 #define MAX_EFFECT_NUMBER 36 // last effect to hit when cycling through next/prev
+#define LED_TYPE    WS2812
+#define COLOR_ORDER GRB
 
 fastspi_strip::fastspi_strip(int n) : num_leds(n), BOTTOM_INDEX(0), TOP_INDEX(n/2), EVENODD(n%2),
   effectNumber(DEFAULT_EFFECT)
 {
   leds = new CRGB[num_leds];
-  ledsX = new int*[num_leds];
-  for (int i=0; i < num_leds; ++i) {
-    ledsX[i] = new int[3];
-  }
-
-  LEDS.addLeds<WS2811, DATA_PIN, GRB>(leds, num_leds);
-  LEDS.setBrightness(128); // SET BRIGHTNESS TO 1/2 POWER
+  //FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, num_leds).setCorrection( TypicalLEDStrip );
+  FastLED.addLeds<LED_TYPE, DATA_PIN, COLOR_ORDER>(leds, num_leds).setCorrection( TypicalLEDStrip );
+  FastLED.setBrightness(255); // SET BRIGHTNESS TO 1/2 POWER
 }
 
 void fastspi_strip::clear()
 {
-  LEDS.clear();
+  FastLED.clear();
 }
 
 //------------------MAIN LOOP------------------
@@ -150,6 +148,9 @@ void fastspi_strip::loop() {
       break;
     case 36:
       one_color_all(255,0,255);   //---106- STRIP SOLID VIOLET?
+      break;
+    case 37:
+      rgb_fade(10);                 //---STRIP RAINBOW FADE
       break;
   }
 }
@@ -290,9 +291,6 @@ void fastspi_strip::HSVtoRGB(int hue, int sat, int val, int colors[3]) {
 
 void fastspi_strip::copy_led_array(){
   for(int i = 0; i < num_leds; i++ ) {
-    ledsX[i][0] = leds[i].r;
-    ledsX[i][1] = leds[i].g;
-    ledsX[i][2] = leds[i].b;
   }  
 }
 
@@ -310,11 +308,8 @@ void fastspi_strip::print_led_arrays(int ilen){
     Serial.print("-");
     Serial.print(leds[i].b);
     Serial.print("|");      
-    Serial.print(ledsX[i][0]);
     Serial.print("-");
-    Serial.print(ledsX[i][1]);
     Serial.print("-");
-    Serial.println(ledsX[i][2]);
   }  
 }
 
@@ -323,7 +318,7 @@ void fastspi_strip::print_led_arrays(int ilen){
 void fastspi_strip::one_color_all(int cred, int cgrn, int cblu) { //-SET ALL LEDS TO ONE COLOR
   for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, cred, cgrn, cblu);
-    LEDS.show();       
+    FastLED.show();
     delay(1);
   }  
 }
@@ -338,10 +333,26 @@ void fastspi_strip::one_color_allNOSHOW(int cred, int cgrn, int cblu) { //-SET A
 void fastspi_strip::rainbow_strobe(int idelay) {
   rainbow_fade(idelay);
   one_color_allNOSHOW(0, 0, 0);
-  LEDS.show();
+  FastLED.show();
   delay(idelay);
 }
 
+void fastspi_strip::rgb_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
+  ibright++;
+  if (ibright >= 255) {
+    ibright = 0;
+    idex--;
+    if (idex < 0) {
+      idex = 2;
+    }
+  }
+  int thisColor[3];
+  thisColor[idex] = ibright;
+  thisColor[(idex + 1) % 3] = 255 - ibright;
+  one_color_allNOSHOW(thisColor[0],thisColor[1],thisColor[2]);
+  FastLED.show();
+  delay(idelay);
+}
 void fastspi_strip::rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAINBOW
   ihue++;
   if (ihue >= 359) {
@@ -350,7 +361,7 @@ void fastspi_strip::rainbow_fade(int idelay) { //-FADE ALL LEDS THROUGH HSV RAIN
   int thisColor[3];
   HSVtoRGB(ihue, 255, 128, thisColor);
   one_color_allNOSHOW(thisColor[0],thisColor[1],thisColor[2]); 
-  LEDS.show();
+  FastLED.show();
   delay(idelay);
 }
 
@@ -369,7 +380,7 @@ void fastspi_strip::rainbow_loop(int istep, int idelay) { //-LOOP HSV RAINBOW
 
   HSVtoRGB(ihue, 255, 255, icolor);
   set_color_led(idex, icolor[0], icolor[1], icolor[2]);
-  LEDS.show();
+  FastLED.show();
   delay(idelay);
 }
 
@@ -382,7 +393,7 @@ void fastspi_strip::random_burst(int idelay) { //-RANDOM INDEX/COLOR
 
   HSVtoRGB(ihue, 255, 255, icolor);
   set_color_led(idex, icolor[0], icolor[1], icolor[2]);
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -409,7 +420,7 @@ void fastspi_strip::color_bounce(int idelay) { //-BOUNCE COLOR (SINGLE LED)
       set_color_led(i, 0, 0, 0);
     }
   }
-  LEDS.show();
+  FastLED.show();
   delay(idelay);
 }
 
@@ -432,7 +443,7 @@ void fastspi_strip::police_lightsONE(int idelay) { //-POLICE LIGHTS (TWO COLOR S
       set_color_led(i, 0, 0, 0);
     }
   }
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -446,7 +457,7 @@ void fastspi_strip::police_lightsALL(int idelay) { //-POLICE LIGHTS (TWO COLOR S
   int idexB = antipodal_index(idexR);
   set_color_led(idexR, 255, 0, 0);
   set_color_led(idexB, 0, 0, 255);
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -499,7 +510,7 @@ void fastspi_strip::color_bounceFADE(int idelay) { //-BOUNCE COLOR (SIMPLE MULTI
     }
   }
 
-  LEDS.show();
+  FastLED.show();
   delay(idelay);
 }
 
@@ -515,7 +526,7 @@ void fastspi_strip::flicker(int thishue, int thissat) {
     
     one_color_allNOSHOW(thisColor[0], thisColor[1], thisColor[2]);
     
-    LEDS.show();    
+    FastLED.show();
     delay(random_delay);
   }
 }
@@ -523,11 +534,11 @@ void fastspi_strip::flicker(int thishue, int thissat) {
 void fastspi_strip::flash(CRGB color, int times, int d) {
   for (int j=0; j < times; j++) {
     one_color_allNOSHOW(color.r, color.g, color.b);
-    LEDS.show();
+    FastLED.show();
     delay(d);
 
     one_color_allNOSHOW(0,0,0);
-    LEDS.show();
+    FastLED.show();
     delay(d);
   }
 }
@@ -553,7 +564,7 @@ void fastspi_strip::pulse_one_color_all(int ahue, int idelay) { //-PULSE BRIGHTN
   for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, acolor[0], acolor[1], acolor[2]);
   }
-  LEDS.show();    
+  FastLED.show();
   delay(idelay);
 }
 
@@ -579,7 +590,7 @@ void fastspi_strip::pulse_one_color_all_rev(int ahue, int idelay) { //-PULSE SAT
   for(int i = 0 ; i < num_leds; i++ ) {
     set_color_led(i, acolor[0], acolor[1], acolor[2]);
   }
-  LEDS.show();
+  FastLED.show();
   delay(idelay);
 }
 
@@ -597,7 +608,7 @@ void fastspi_strip::random_red() { //QUICK 'N DIRTY RANDOMIZE TO GET CELL AUTOMA
       }
     }
   }
-  LEDS.show();  
+  FastLED.show();
 }
 
 
@@ -610,34 +621,10 @@ void fastspi_strip::rule30(int idelay) { //1D CELLULAR AUTOMATA - RULE 30 (RED F
     iCW = adjacent_cw(i);
     iCCW = adjacent_ccw(i);
     for (int c=0; c < 2; c++) {
-      if (ledsX[iCCW][c] > y && ledsX[i][c] > y && ledsX[iCW][c] > y) {
-        leds[i][c] = 0;
-      }
-      if (ledsX[iCCW][c] > y && ledsX[i][c] > y && ledsX[iCW][c] <= y) {
-        leds[i][c] = 0;
-      }
-      if (ledsX[iCCW][c] > y && ledsX[i][c] <= y && ledsX[iCW][c] > y) {
-        leds[i][c] = 0;
-      }
-      if (ledsX[iCCW][c] > y && ledsX[i][c] <= y && ledsX[iCW][c] <= y) {
-        leds[i][c] = 255;
-      }
-      if (ledsX[iCCW][c] <= y && ledsX[i][c] > y && ledsX[iCW][c] > y) {
-        leds[i][c] = 255;
-      }
-      if (ledsX[iCCW][c] <= y && ledsX[i][c] > y && ledsX[iCW][c] <= y) {
-        leds[i][c] = 255;
-      }
-      if (ledsX[iCCW][c] <= y && ledsX[i][c] <= y && ledsX[iCW][c] > y) {
-        leds[i][c] = 255;
-      }
-      if (ledsX[iCCW][c] <= y && ledsX[i][c] <= y && ledsX[iCW][c] <= y) {
-        leds[i][c] = 0;
-      }
     }
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -655,12 +642,9 @@ void fastspi_strip::random_march(int idelay) { //RANDOM MARCH CCW
 
   for(int i = 1; i < num_leds ; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];    
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -694,12 +678,9 @@ void fastspi_strip::rwb_march(int idelay) { //R,W,B MARCH CCW
 
   for(int i = 1; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];    
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -753,7 +734,7 @@ void fastspi_strip::white_temps() {
       leds[i].b = 255;
     } //-CLEAR BLUE SKY - 20000  
   }
-  LEDS.show();  
+  FastLED.show();
   delay(100);
 }
 
@@ -784,7 +765,7 @@ void fastspi_strip::color_loop_vardelay(int iperiod, int idelay) { //-COLOR LOOP
     }
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(t);
 }
 
@@ -794,11 +775,8 @@ void fastspi_strip::strip_march_cw(int idelay) { //-MARCH STRIP C-W
   int iCCW;  
   for(int i = 0; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCCW = adjacent_ccw(i);
-    leds[i].r = ledsX[iCCW][0];
-    leds[i].g = ledsX[iCCW][1];
-    leds[i].b = ledsX[iCCW][2];    
   }
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -808,11 +786,8 @@ void fastspi_strip::strip_march_ccw(int idelay) { //-MARCH STRIP C-W
   int iCW;  
   for(int i = 0; i < num_leds; i++ ) {  //-GET/SET EACH LED COLOR FROM CCW LED
     iCW = adjacent_cw(i);
-    leds[i].r = ledsX[iCW][0];
-    leds[i].g = ledsX[iCW][1];
-    leds[i].b = ledsX[iCW][2];    
   }
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -847,7 +822,7 @@ void fastspi_strip::pop_random(int ahue, int idelay) {
     }
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);    
 
 }
@@ -888,7 +863,7 @@ void fastspi_strip::pop_horizontal(int ahue, int idelay) {  //-POP FROM LEFT TO 
     }
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);    
 }
 
@@ -921,7 +896,7 @@ void fastspi_strip::quad_bright_curve(int ahue, int idelay) {  //-QUADRATIC BRIG
     leds[x].b = acolor[2];
 
   }
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -955,7 +930,7 @@ void fastspi_strip::flame() {
     leds[TOP_INDEX].g = 255; 
     leds[TOP_INDEX].b = 255;
 
-    LEDS.show();    
+    FastLED.show();
     delay(idelay);
   }
 }
@@ -990,7 +965,7 @@ void fastspi_strip::radiation(int ahue, int idelay) { //-SORT OF RADIATION SYMBO
     leds[j2].b = acolor[2];    
 
   }    
-  LEDS.show();    
+  FastLED.show();
   delay(idelay);    
 }
 
@@ -1012,7 +987,7 @@ void fastspi_strip::sin_bright_wave(int ahue, int idelay) {
     leds[i].b = acolor[2];
 
   }
-    LEDS.show();    
+    FastLED.show();
     delay(idelay);
 }
 
@@ -1035,7 +1010,7 @@ void fastspi_strip::fade_vertical(int ahue, int idelay) { //-FADE 'UP' THE LOOP
   set_color_led(idexA, acolor[0], acolor[1], acolor[2]);  
   set_color_led(idexB, acolor[0], acolor[1], acolor[2]);  
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -1059,7 +1034,7 @@ void fastspi_strip::rainbow_vertical(int istep, int idelay) { //-RAINBOW 'UP' TH
   set_color_led(idexA, acolor[0], acolor[1], acolor[2]);  
   set_color_led(idexB, acolor[0], acolor[1], acolor[2]);  
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 
@@ -1110,7 +1085,7 @@ void fastspi_strip::pacman(int idelay) { //-MARCH STRIP C-W
     leds[s+2].b = 0;
   }
 
-  LEDS.show();  
+  FastLED.show();
   delay(idelay);
 }
 

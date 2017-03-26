@@ -1,4 +1,4 @@
-#include <FastSPI_LED2.h>
+#include "FastLED.h"
 
 class fastspi_strip {
   int BOTTOM_INDEX;
@@ -45,6 +45,7 @@ public:
   /* Lighting Effects */
   void rainbow_strobe(int idelay) ;
   void rainbow_fade(int idelay) ; //-FADE ALL LEDS THROUGH HSV RAINBOW
+  void rgb_fade(int idelay) ; //-FADE ALL LEDS THROUGH HSV RAINBOW
   void rainbow_loop(int istep, int idelay) ; //-LOOP HSV RAINBOW
   void random_burst(int idelay) ; //-RANDOM INDEX/COLOR
   void color_bounce(int idelay) ; //-BOUNCE COLOR (SINGLE LED)

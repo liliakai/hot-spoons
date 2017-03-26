@@ -1,5 +1,4 @@
-#include <FastSPI_LED2.h>
-#include <SerialCommand.h>
+#include <FastLED.h>
 #include "fastspi_strip.h"
 #include "button.h"
 #include "game.h"
@@ -15,8 +14,9 @@ enum {
   MAX_MODE
 };
 
-#define NUM_LEDS 240
-int mode = TIMING_MODE;
+void demo_mode();
+#define NUM_LEDS 825
+int mode = LIGHTSHOW_MODE;
 
 Button button1 = Button(A6);
 Button button2 = Button(A7);
@@ -26,15 +26,11 @@ Button button5 = Button(12);
 
 fastspi_strip strip = fastspi_strip(NUM_LEDS);
 game g = game(NUM_LEDS, strip, button4, button5);
-SerialCommand sCmd;
 
 void setup() {
   Serial.begin(115200);
   Serial.print("Mode ");
   Serial.print(mode);
-
-  sCmd.addCommand("m",   set_lightshow_effect);
-  sCmd.setDefaultHandler(unrecognized);
 
   strip.clear();
 
@@ -51,7 +47,6 @@ void loop() {
     setup();
   }
 
-  sCmd.readSerial(); // process serial commands
 
   if (mode == DEMO_MODE) {
     demo_mode();
@@ -74,7 +69,6 @@ void loop() {
 // Called by SerialCommand to handle light show mode change commands
 void set_lightshow_effect() {
   char *arg;
-  arg = sCmd.next();
 
   if (arg != NULL) {
     strip.set_effect(atoi(arg));

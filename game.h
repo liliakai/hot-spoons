@@ -1,4 +1,4 @@
-#include "spectrum.h"
+//#include "spectrum.h"
 #include "noise.h"
 #define TIMEWINDOW 30
 #define SHOT 10
@@ -94,7 +94,7 @@ public:
       handleButtons_timing();
     }
     else if (mode == spectrum_mode) {
-      handleSpectrum();
+      //handleSpectrum();
     }
     LEDS.show();
 
@@ -113,17 +113,6 @@ public:
     setup();
   }
 
-  void handleSpectrum () {
-    boolean b1 = button1.pressed() || spectrum(LOW_SPECTRUM);
-    boolean b2 = button2.pressed() || spectrum(HIGH_SPECTRUM);
-
-    if (b1) {
-      b1fire();
-    }
-    if (b2) {
-      b2fire();
-    }
-  }
 
   void handleButtons_freeplay() {
     boolean b1 = button1.read();
